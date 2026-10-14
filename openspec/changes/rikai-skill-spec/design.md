@@ -2,8 +2,8 @@
 
 動機は proposal.md の Why を参照する。
 
-- `docs/design.md` は、設計インタビュー（2026-10-14）の内容をまとめた1ファイルで、本 change の apply で削除する。入力はこのファイルで、観察できる振る舞いは specs（`rikai-*`）に移している。この `design.md` が持つのは、実装方針（§4）、このリポジトリの開発セッション向けの扱い（§5 の一部）、未決事項（§7）である。
-- 現状のリポジトリには、スキル本体（`SKILL.md`、`scripts/`、manifest）が存在しない。`docs/`、`README.md`、`AGENTS.md`、`CLAUDE.md`、`.claude/`、`.gitignore`、`openspec/` のみがある。
+- `docs/design.md` は、設計インタビュー（2026-10-14）の内容をまとめた1ファイルで、本 change の apply で削除する。入力はこのファイルで、観察できる振る舞いは specs（`rikai-*`）に移している。この `design.md` が持つのは、実装方針（§1 のうち実装に関わる方針、§4）、このリポジトリの開発セッション向けの扱い（§5 の一部）、未決事項（§7）である。
+- 現状のリポジトリには、スキル本体（`SKILL.md`、`scripts/`、manifest）が存在しない。`README.md`、`AGENTS.md`、`CLAUDE.md`、`.claude/`、`.gitignore`、`openspec/` のみがある（`docs/design.md` は本 change で削除する）。
 - 「ユーザー」は rikai の利用者を指す。
 - 設計メモの項目に付けたラベルは、次の意味で本書と specs にそのまま残している。見出しや導入文に付いたラベルは配下の項目に及び、項目に個別のラベルがあればそれを優先する。
   - 確定: 設計インタビューで、設計者が明示的に選んだ事項
@@ -40,19 +40,19 @@
 
 参照の更新では、節番号（§1、§4、§5、§7）で指していたものを、移し先の spec 名または本書の節名に置き換える。
 
-### 以下は設計インタビューで決まった事項を、そのまま引き継ぐ
+### 以下は設計インタビューの事項を、ラベルを維持して引き継ぐ
 
 引き継いだ事項の代替案は、設計メモに記録が無い。理由が残っているものだけ、理由を書く。
 
 #### コアは `SKILL.md` だけで完結させる
 
-- 通常のチャットと Claude Code の両方で使える。コアは `SKILL.md` だけで完結させる。（確定）
+- 通常のチャットとAIエージェント（Claude Code）の両方で使える。コアは `SKILL.md` だけで完結させる。（確定）
 - スクリプト、フラグ、statusline、ファイル保存は Claude Code 向けの任意層とし、無くても動作する。（確定）
 - アーキテクチャは [yomiyasu](https://github.com/nanaism/yomiyasu) を参考にした最小構成とする。（確定）
 
 #### リポジトリの目標構成
 
-最小構成（`SKILL.md` 単一ファイル、`scripts/`、`tests/`）とすることは確定。ファイルの拡張子とテストの実行方法は既定。以下は目標構成で、残りは以降の issue で追加する。
+最小構成（`SKILL.md` 単一ファイル、`scripts/`、`tests/`）とすることは確定。ファイルの拡張子は既定。テストの実行方法（vitest）は確定。vitest の導入に伴う `package.json` と最小構成の関係は未決。以下は目標構成で、残りは以降の issue で追加する。
 
 ```text
 rikai/
@@ -65,7 +65,8 @@ rikai/
 │       ├─ flag.mts          # フラグの on / off / install
 │       ├─ statusline.mts    # [理解] バッジ
 │       └─ pick.mts          # 質問提案 / クイズの機械選択
-├─ tests/                    # node --test
+├─ tests/                    # vitest
+├─ package.json              # vitest の devDependency（存否と内容は未決）
 ├─ openspec/                 # 仕様（specs/）と change
 ├─ README.md
 ├─ AGENTS.md / CLAUDE.md
@@ -80,18 +81,19 @@ rikai/
 
 #### スクリプトの実装方針
 
-- スクリプトは `.mts` で書き、`node` で直接実行する。ビルドしない。テストは `node --test`。要件は Node 22.18 以上。（既定）
+- スクリプトは `.mts` で書き、`node` で直接実行する。ビルドしない。要件は Node 22.18 以上。（既定）
+- テストは vitest で実行し、`tests/` に置く。（確定。開発者が `AGENTS.md` の Script Development で定めた。2026-10-14 の設計インタビューでは `node --test`（既定）だった。変更の理由は記録されていない）
 - `SKILL.md` の `allowed-tools` で、`pick.mts` と `flag.mts on|off` に限り確認なしで実行できるようにする。`flag.mts install` は `~/.claude/` への書き込みを伴うため、確認付きにする。（既定）
 - `pick.mts` は乱数を引数で注入できるようにし、境界値（0.5）をテストできるようにする。（既定）
 - `flag.mts` と `statusline.mts` は、`session_id` を `[A-Za-z0-9_-]` のみ許可し、symlink を拒否する。（既定）
 
 #### スクリプトと spec の対応
 
-- `pick.mts`: rikai-question-selection の機械選択
-- `flag.mts`: rikai-badge のフラグの書き換えと、statusline の導入
+- `pick.mts`: rikai-question-selection の機械選択。`node ${CLAUDE_SKILL_DIR}/scripts/pick.mts` で実行し、乱数を引いて質問提案かクイズかを出力する。（確定。閾値と向きは既定）
+- `flag.mts`: rikai-badge のフラグの書き換えと、statusline の導入。フラグの書き込みは `flag.mts` が行い、`SKILL.md` が起動時・終了時に呼ぶ。（確定）
 - `statusline.mts`: rikai-badge のバッジ表示。`flag.mts install` が `${CLAUDE_CONFIG_DIR:-~/.claude}/rikai/` にコピーする。plugin キャッシュのパスは更新で変わるため。（確定）
 
-#### 他スキルとの併用（このリポジトリの開発セッション）
+#### 他スキルとの併用
 
 - このリポジトリでの genshijin と他のスキルの優先順位は、`.claude/rules/genshijin-priority.md` に定める。他のスキルを優先する。（確定）
   - このルールは散文で、genshijin が毎ターン注入する指示に対する優先は保証されない（ベストエフォート）。
@@ -104,18 +106,19 @@ rikai/
 - [実装前の仕様を `openspec/specs/` に確定させるため、実装の段階で食い違いが出る] → 食い違いは、実装 issue で change を立てて MODIFIED として更新する。既定の項目は、異論があれば変更する前提で書かれている。
 - [節番号で参照していた箇所が、移し先で節番号を持たない] → 参照を spec 名または本書の節名に書き換える（tasks.md の 2）。
 - [仕様を書いた人が、そのままレビューを兼ねる] → archive の前に、`matagi-kaji:ai-engineering-review` で、別エージェントが md 資産をレビューする。
+- [`.claude/settings.json` の deny が、`openspec-workflow` の ARCHIVE（`openspec-archive-change` のスキル起動）も塞ぐ] → ARCHIVE は、REVIEW の完了後に承認を得て、CLI の `openspec archive` で行う。`matagi` 側の手順との矛盾は、整理を待つ。
 
 ## Migration Plan
 
 1. 本 change の spec と design を追加する。
 2. 参照を更新し、`docs/design.md` を削除する。
-3. レビューを済ませてから archive し、`openspec/specs/` に5つの spec を反映する。
+3. レビューを済ませてから、承認を得て CLI の `openspec archive` で archive し、`openspec/specs/` に5つの spec を反映する。
 
 問題があれば、該当コミットを revert する。`docs/design.md` は git 履歴から復元できる。
 
 ## Open Questions
 
-設計インタビューの時点で未決または要確認だった事項を、そのまま引き継ぐ。specs の振る舞いに影響する項目が決まった時点で、MODIFIED の delta として仕様を更新する。
+設計インタビューの時点で未決または要確認だった事項を引き継ぐ。移行時に追加した項目には「（移行時に追加）」と付ける。specs の振る舞いに影響する項目が決まった時点で、MODIFIED の delta として仕様を更新する。
 
 ### 出力
 
@@ -135,6 +138,7 @@ rikai/
 - 「○○は何？」以外の形（どこ／仕組み／なぜ／具体的には）で尋ねた場合の判定。
 - レポート項目の遷移規則（例: 理解できてない → 後で一致 → 理解した）。重複排除と、レポートが伸び続けないための上限。
 - 出題元を直前の回答とする基本の例外。理解できてない箇所を再出題するか。
+- 「返答なし」を記録する条件。設計インタビューの記録（削除済みの `docs/design.md`）の §2.6 は「問いを無視して別の話題に移った場合」、§2.8 の図は「返答を含まず前回の問いが残っていた場合」と書いており、範囲が一致するかは確認していない。（移行時に追加）
 
 ### 状態の保持
 
@@ -154,6 +158,7 @@ rikai/
   - `allowed-tools` での `${CLAUDE_SKILL_DIR}` の展開
   - `CLAUDE_CONFIG_DIR` の扱い
   - `.mts` を直接実行できる Node の最小バージョン（22.18 を想定）
+  - vitest の Node 要件と、上の最小バージョンの整合（移行時に追加）
 - `SKILL.md` の `description` のトリガー文言（通常チャットでの自然言語起動のため）。
 
 ### 検証
@@ -170,4 +175,5 @@ rikai/
 - `LICENSE` の追加（別 issue 候補）。
 - GitHub 側のブランチ保護（ruleset）の設定。matagi の hook は Claude Code セッション内の制約で、GitHub 側の保護の代わりにはならない。
 - SemVer の運用（バージョンの所在、破壊的変更とみなす範囲）。
+- vitest の導入に伴う、`package.json` の存否・内容、lockfile・パッケージマネージャの扱い、`node_modules/` の `.gitignore` への追加。（移行時に追加）
 - 第三者の plugin（genshijin など）の参照を、タグなどで固定するか。現状は既定ブランチに追従する。

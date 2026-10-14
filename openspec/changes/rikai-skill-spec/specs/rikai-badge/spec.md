@@ -1,11 +1,11 @@
 ## Purpose
 
-モードが有効かどうかをユーザーがひと目で確認できるようにするため、Claude Code の statusline に `[理解]` バッジを表示し、そのフラグの持ち方と導入方式を定める。
+モードが有効であることを statusline で示すため、Claude Code の statusline に `[理解]` バッジを表示し、そのフラグの持ち方と導入方式を定める。
 
 ## ADDED Requirements
 
 ### Requirement: モード有効中にバッジを表示する
-モード有効中、rikai は Claude Code の statusline に `[理解]` を表示しなければならない（SHALL）。通常チャットには statusline が無いので、バッジは出ない。（確定）
+モード有効中、rikai は Claude Code の statusline に `[理解]` を表示しなければならない（SHALL）。genshijin の `[原始人]` と同様の表示とする。通常チャットには statusline が無いので、バッジは出ない。（確定）
 
 #### Scenario: モード有効中の Claude Code
 - **WHEN** Claude Code でモードが有効である
@@ -31,7 +31,7 @@ Claude Code では、rikai は起動時と終了時に、バッジ用のフラ�
 - **THEN** バッジ用のフラグを解除に書き換える
 
 ### Requirement: フラグをセッション別に持つ
-rikai は、バッジ用のフラグをセッション別に持たなければならない（SHALL）。場所は `${CLAUDE_CONFIG_DIR:-~/.claude}/rikai/active/<session_id>` とする。（既定）スキル側は `${CLAUDE_SESSION_ID}`、statusline 側は stdin JSON の `session_id` で、同じIDを得られる。別セッションにバッジが出ることを避ける。
+rikai は、バッジ用のフラグをセッション別に持たなければならない（SHALL）。場所は `${CLAUDE_CONFIG_DIR:-~/.claude}/rikai/active/<session_id>` とする。（既定）スキル側は `${CLAUDE_SESSION_ID}`、statusline 側は stdin JSON の `session_id` で、同じIDを得られる。別セッションにバッジが出ることを避ける。終了しなかったセッションのフラグが残る問題の掃除方法は未決である。
 
 #### Scenario: 別セッションの表示
 - **WHEN** あるセッションでモードが有効で、別のセッションではモードが有効でない

@@ -7,7 +7,7 @@ rikai の設計は、設計インタビューの記録として `docs/design.md`
 ## What Changes
 
 - `docs/design.md` の内容を、5つの capability の spec と change の `design.md` に再構成して移す。内容は落とさず、新しい決定は加えない。
-- 確定・既定・未決・要確認の区別を維持する。確定・既定は spec または `design.md` の決定事項に、未決・要確認は `design.md` の Open Questions に置く。
+- 確定・既定・未決・要確認の区別を維持する。確定・既定は spec または `design.md` の決定事項に、未決・要確認は `design.md` の Open Questions に置く。原本が §7 を指していた箇所（出力順の例外、フラグの掃除、コマンド名など）は、該当する要件の本文にも一言添える。
 - §6 開発プロセスは `AGENTS.md` と重複するため移さない。
 - `docs/design.md` を指している参照を、移し先に更新する。
 - `docs/design.md` を削除する。設計インタビューの経緯は git 履歴に残る。
