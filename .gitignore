@@ -1,0 +1,6 @@
+# Claude Code の個人設定（許可ルールなど）
+.claude/settings.local.json
+CLAUDE.local.md
+
+# rikai のレポート出力先（会話内容を含みうる）
+.rikai/

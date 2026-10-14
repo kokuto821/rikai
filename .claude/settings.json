@@ -1,0 +1,27 @@
+{
+  "extraKnownMarketplaces": {
+    "matagi": {
+      "source": {
+        "source": "github",
+        "repo": "kokuto821/matagi"
+      }
+    },
+    "yomiyasu": {
+      "source": {
+        "source": "github",
+        "repo": "nanaism/yomiyasu"
+      }
+    },
+    "genshijin": {
+      "source": {
+        "source": "github",
+        "repo": "InterfaceX-co-jp/genshijin"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "matagi@matagi": true,
+    "yomiyasu@yomiyasu": true,
+    "genshijin@genshijin": true
+  }
+}
