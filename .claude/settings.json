@@ -21,6 +21,7 @@
   },
   "enabledPlugins": {
     "matagi@matagi": true,
+    "matagi-kaji@matagi": true,
     "yomiyasu@yomiyasu": true,
     "genshijin@genshijin": true
   }
