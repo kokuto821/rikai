@@ -10,7 +10,7 @@ context: |
 
 rules:
   proposal:
-    - 対象 issue 番号を明記すること（matagi の issue-driven-rule: shared-rules/issue-driven-development/issue-driven-rule.md）
+    - 対象 issue 番号を明記すること（matagi の issue-driven-rule、shared-rules/issue-driven-development/issue-driven-rule.md を参照）
   design:
     - matagi の design-rule（shared-rules/design-principles/design-rule.md）の観点で代替案と比較すること
   tasks:
