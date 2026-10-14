@@ -188,7 +188,9 @@ rikai/
 ├─ docs/design.md            # この文書
 ├─ README.md
 ├─ AGENTS.md / CLAUDE.md
-├─ .claude/settings.json
+├─ .claude/
+│   ├─ settings.json
+│   └─ rules/genshijin-priority.md
 ├─ .gitignore
 └─ LICENSE                   # 未決（§7）
 ```
@@ -200,18 +202,16 @@ rikai/
 
 ## 5. 他スキルとの併用
 
-- genshijin など文体を変えるスキルと併用する場合も、rikai のセクションは明瞭さを優先して通常の日本語で書く。（既定）
+- genshijin など文体を変えるスキルと併用する場合も、rikai が足すセクション（判定結果・理解度レポート・問い）は、明瞭さを優先して通常の日本語で書く。回答本文の文体は rikai の対象外とする。（既定）
+- このリポジトリでの genshijin と他のスキルの優先順位は、`.claude/rules/genshijin-priority.md` に定める。他のスキルを優先する。（確定）
+  - このルールは散文で、genshijin が毎ターン注入する指示に対する優先は保証されない（ベストエフォート）。
+  - 効くのは、このリポジトリの開発セッションだけ。rikai の利用者向けの対策は、`SKILL.md` の指示（上の「通常の日本語で書く」）で行う。これもベストエフォートである。
 - 類似スキルの併用で指示が食い違う場合があることは、実装 issue で README を更新するときに記載する。（yomiyasu と同様。既定）
 
 ## 6. 開発プロセス
 
-`AGENTS.md` を正とする。この節と食い違う場合は `AGENTS.md` を優先する。スキルの参照名の表記も `AGENTS.md` に合わせている（§7）。
-
-- Trunk Based Development、SemVer を採用する。
-- コード修正は issue 経由のみを原則とする。
-- issue 駆動の実行手順は `matagi/github-issue-resolve` に従う。
-- スキルの作成・修正は `matagi-kaji/create-skill`、レビューは `matagi-kaji/ai-engineering-review` に任せ、レビューが通るまで繰り返す。
-- スクリプトは TDD で実装する。
+Trunk Based Development、SemVer、issue 駆動を採用し、スクリプトは TDD で実装する。
+手順と詳細は `AGENTS.md` を正とし、ここには重複して書かない。
 
 ## 7. 未決事項と要確認事項
 
@@ -254,13 +254,18 @@ rikai/
   - `.mts` を直接実行できる Node の最小バージョン（22.18 を想定）
 - `SKILL.md` の `description` のトリガー文言（通常チャットでの自然言語起動のため）。
 
+### 検証
+
+- `.claude/rules/genshijin-priority.md` が効いているかの観察。genshijin を有効にしたまま数ターン使い、次を確認する。
+  - レビューの指摘が圧縮されないか
+  - rikai 風の問いが圧縮されないか
+  - コミットメッセージや PR 本文が圧縮されないか
+  - `.md` の編集時に、口調の確認が出ないか
+- 効かない場合の手段。`permissions.deny` による `genshijin:genshijin-compress` と `genshijin:genshijin-builder` の禁止、genshijin を個人設定へ移すこと、など。
+
 ### リポジトリ
 
 - `LICENSE` の追加（別 issue 候補）。
-- `AGENTS.md` の記述の整理。
-  - `.claude/settings.json` で `matagi-kaji@matagi` を有効化するか。`create-skill` と `ai-engineering-review` は `matagi-kaji` にあり、現状は有効化されていない
-  - スキルの参照名の表記を `plugin:skill` 形式に統一するか
-  - 「例外として」の位置づけ。これらは `matagi:github-issue-resolve` の手順内の委譲先で、issue 駆動の例外ではない
-  - `create-skill` は新規作成用。既存スキルの編集は含まれない
-  - 「レビューが通るまで3から繰り返し」の参照先と、`matagi:github-issue-resolve` の最大2ラウンドとの関係
-  - `create-skill` の配置先（`plugins/matagi/skills/`）と、この設計の配置（`skills/rikai/`）の食い違い
+- GitHub 側のブランチ保護（ruleset）の設定。matagi の hook は Claude Code セッション内の制約で、GitHub 側の保護の代わりにはならない。
+- SemVer の運用（バージョンの所在、破壊的変更とみなす範囲）。
+- 第三者の plugin（genshijin など）の参照を、タグなどで固定するか。現状は既定ブランチに追従する。
