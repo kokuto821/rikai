@@ -14,5 +14,6 @@ AIの回答をユーザーが理解できているかを確かめ、理解を促
 
 ## ドキュメント
 
-- [設計メモ](docs/design.md)（確定・既定・未決を区別して記載）
+- [仕様](openspec/specs/)（rikai の振る舞い。確定・既定・未決・要確認を区別して記載）
+- [設計と未決事項](openspec/changes/archive/)（`archive/*-rikai-skill-spec/design.md`。実装方針と未決事項を記載）
 - [開発ルール](AGENTS.md)

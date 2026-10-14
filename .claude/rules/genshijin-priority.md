@@ -11,8 +11,8 @@ genshijin は応答の文体を圧縮するスキル。他のスキルやルー�
 
 - スキルの手順の中で出す報告・提示・確認（フェーズの宣言、ブランチ名案、コミット計画、最終報告）
 - コミットメッセージ、issue・PR の本文、レビューの指摘
-- ファイルに書く文章（README、`docs/`、スキル、ルール）。このとき genshijin の「口調で書くか」の確認は出さない
-- rikai の判定結果・理解度レポート・問い（[docs/design.md](../../docs/design.md) §5）
+- ファイルに書く文章（README、`openspec/`、スキル、ルール）。このとき genshijin の「口調で書くか」の確認は出さない
+- rikai の判定結果・理解度レポート・問い（[rikai-session-mode](../../openspec/specs/rikai-session-mode/spec.md) の「併用スキルの文体に関わらず追加セクションを通常の日本語で書く」）
 
 ## 起動しないもの
 
@@ -24,4 +24,4 @@ genshijin は応答の文体を圧縮するスキル。他のスキルやルー�
 
 ## 圧縮して上書きするもの
 
-`genshijin:genshijin-compress` は、リポジトリ内のファイル（`CLAUDE.md`、`AGENTS.md`、`README.md`、`.claude/rules/`、`docs/`、`skills/` を含む）を圧縮して上書きする。自分からは起動しない。ユーザーが求めた場合は、上書きの前に確認し、承認を得てから実行する。
+`genshijin:genshijin-compress` は、リポジトリ内のファイル（`CLAUDE.md`、`AGENTS.md`、`README.md`、`.claude/rules/`、`openspec/`、`skills/` を含む）を圧縮して上書きする。自分からは起動しない。ユーザーが求めた場合は、上書きの前に確認し、承認を得てから実行する。

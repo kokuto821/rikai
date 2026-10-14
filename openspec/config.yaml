@@ -6,7 +6,7 @@ schema: spec-driven
 
 context: |
   この作業ディレクトリの規約は matagi のルール（plugins/matagi/shared-rules/）を参照し、矛盾しないこと。
-  リポジトリの開発ルールは AGENTS.md、設計は docs/design.md を参照する。
+  リポジトリの開発ルールは AGENTS.md、仕様は openspec/specs/ を参照する。
 
 rules:
   proposal:
