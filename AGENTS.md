@@ -42,6 +42,13 @@ issue駆動開発を採用する。リポジトリに残る変更（コード・
 
 スクリプト（`.mts`）の開発はTDDで実装する（`matagi:tdd`）。テストはvitestを用いる。`tests/` の配置とスクリプトの方針は、`rikai-skill-spec` の `design.md`「スクリプトの実装方針」「リポジトリの目標構成」を参照する。
 
+## Writing
+
+日本語の文章を書くとき、またはコードコメントを書くときは、`yomiyasu:yomiyasu` で推敲する。
+
+- 対象は、リポジトリに残る文章（README、`openspec/`、スキル、ルール、issueとPRの本文など）とコードコメント。チャットの説明文は含まない。
+- コミットメッセージは対象外。`matagi:commit-message-simple` に従う。
+
 ## Dev Workflow
 
 順序と委譲先は `matagi:github-issue-resolve` が定める。図はその要約で、rikai固有の点は、`.mts` を `matagi:tdd` で実装することと、OpenSpecの対象を `openspec/specs/` の変更に絞ることだけ。
