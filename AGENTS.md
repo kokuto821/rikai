@@ -44,10 +44,11 @@ issue駆動開発を採用する。リポジトリに残る変更（コード・
 
 ## Writing
 
-日本語の文章を書くとき、またはコードコメントを書くときは、`yomiyasu:yomiyasu` で推敲する。
+日本語の文章を書くとき、またはコードコメントを書くときは、`yomiyasu:yomiyasu` で推敲し、`genshijin` を併用する。
 
-- 対象は、リポジトリに残る文章（README、`openspec/`、スキル、ルール、issueとPRの本文など）とコードコメント。チャットの説明文は含まない。
-- コミットメッセージは対象外。`matagi:commit-message-simple` に従う。
+- `yomiyasu` の対象は、リポジトリに残る文章（README、`openspec/`、スキル、ルール、issueとPRの本文など）とコードコメント。チャットの説明文は含まない。
+- コミットメッセージは `yomiyasu` の対象外。`matagi:commit-message-simple` に従う。
+- `genshijin` が圧縮するのはチャットの説明文だけ。ファイルに書く文章は、圧縮せず通常の日本語で書く。範囲と優先順位は `.claude/rules/genshijin-priority.md` に従う。
 
 ## Dev Workflow
 
