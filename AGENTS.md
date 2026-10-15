@@ -44,10 +44,11 @@ issue駆動開発を採用する。リポジトリに残る変更（コード・
 
 ## Writing
 
-日本語の文章を書くとき、またはコードコメントを書くときは、`genshijin` の口調で書き、`yomiyasu:yomiyasu` で推敲する。
+日本語の文章を書くとき、またはコードコメントを書くときは、先に `genshijin` の口調で書き、そのあとに `yomiyasu:yomiyasu` で校正する。
 
-- 対象は、リポジトリに残る文章（README、`openspec/`、スキル、ルール、コードコメントなど）。口調は `genshijin`（通常レベル）に従い、`yomiyasu` で戻さない。`yomiyasu` が直すのは、曖昧な主述や不自然な比喩など、口調以外の点。
-- issueとPRの本文は、`yomiyasu` で推敲するが、`genshijin` の口調にはせず、通常の日本語で書く。
+- 対象は、リポジトリに残る文章（README、`openspec/`、スキル、ルール、コードコメントなど）。`genshijin` は通常レベルで使う。
+- 口調など、両者の指示が食い違う点は、あとの `yomiyasu` の校正を優先する。意味・条件・数値は変えない。
+- issueとPRの本文は、`genshijin` の口調にはせず、通常の日本語で書いて `yomiyasu` で校正する。
 - コミットメッセージは両方の対象外。`matagi:commit-message-simple` に従う。
 - 圧縮の範囲と他のスキルとの優先順位は、`.claude/rules/genshijin-priority.md` に従う。
 
