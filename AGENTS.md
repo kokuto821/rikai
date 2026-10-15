@@ -5,8 +5,8 @@ rikaiの開発ルール。概要は [README.md](README.md)、仕様は [openspec
 
 ## 前提
 
-- Claude Codeで開発する。必須pluginは `matagi`、`matagi-kaji`（`.claude/settings.json` で有効化済み。初回はフォルダの信頼とpluginの導入の承認が要る）。
-- `yomiyasu`（日本語の推敲）と `genshijin`（応答文体の圧縮）は任意。他のスキルとの優先順位は `.claude/rules/genshijin-priority.md` に従う。
+- Claude Codeで開発する。必須pluginは `matagi`、`matagi-kaji`、`yomiyasu`（日本語の推敲）、`genshijin`（応答文体の圧縮）（`.claude/settings.json` で有効化済み。初回はフォルダの信頼とpluginの導入の承認が要る）。
+- `genshijin` と他のスキルの優先順位は `.claude/rules/genshijin-priority.md` に従う。必須なのは開発環境の話で、rikaiスキル自体はこれらのpluginに依存しない。
 - スクリプト（`.mts`）の実行にNodeが必要。最小バージョンは `rikai-skill-spec` の `design.md`「スクリプトの実装方針」を参照する。
 - `issue-driven-rule`・`openspec-rule` など、`matagi` と `matagi-kaji` のルールはプラグイン側の `shared-rules/` にあり、各スキルが参照する。このリポジトリでは複製せず、ルール名だけを挙げる。
 
