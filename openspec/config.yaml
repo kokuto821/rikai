@@ -1,0 +1,25 @@
+schema: spec-driven
+
+# context / rules / operations は AI への制約であり、生成アーティファクトにはコピーされない。
+# ルール本文は書かず、matagi のルールへの参照ポインタだけを置く。
+# 唯一の正: matagi の shared-rules/openspec-integration/openspec-rule.md §導入
+
+context: |
+  この作業ディレクトリの規約は matagi のルール（plugins/matagi/shared-rules/）を参照し、矛盾しないこと。
+  リポジトリの開発ルールは AGENTS.md、仕様は openspec/specs/ を参照する。
+
+rules:
+  proposal:
+    - 対象 issue 番号を明記すること（matagi の issue-driven-rule、shared-rules/issue-driven-development/issue-driven-rule.md を参照）
+  design:
+    - matagi の design-rule（shared-rules/design-principles/design-rule.md）の観点で代替案と比較すること
+  tasks:
+    - 各タスクの実装委譲先（matagi:tdd / matagi:coding / matagi:test-coding）を明記すること
+
+operations:
+  apply:
+    guidance:
+      - matagi:openspec-workflow スキル経由で進めること。実装は既存の産出 skill（matagi:tdd / matagi:coding / matagi:test-coding）へ委譲し、openspec-apply-change は直接使わない
+  archive:
+    guidance:
+      - archive の前に、matagi-kaji の review-independence-rule（shared-rules/harness-engineering/review-independence-rule.md）に従ったレビューを済ませること

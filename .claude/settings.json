@@ -1,0 +1,36 @@
+{
+  "extraKnownMarketplaces": {
+    "matagi": {
+      "source": {
+        "source": "github",
+        "repo": "kokuto821/matagi"
+      }
+    },
+    "yomiyasu": {
+      "source": {
+        "source": "github",
+        "repo": "nanaism/yomiyasu"
+      }
+    },
+    "genshijin": {
+      "source": {
+        "source": "github",
+        "repo": "InterfaceX-co-jp/genshijin"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "matagi@matagi": true,
+    "matagi-kaji@matagi": true,
+    "yomiyasu@yomiyasu": true,
+    "genshijin@genshijin": true
+  },
+  "permissions": {
+    "deny": [
+      "Skill(openspec-apply-change *)",
+      "Skill(openspec-archive-change *)",
+      "Skill(opsx:apply *)",
+      "Skill(opsx:archive *)"
+    ]
+  }
+}
