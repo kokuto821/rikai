@@ -2,6 +2,9 @@
 .claude/settings.local.json
 CLAUDE.local.md
 
+# npm の依存
+node_modules/
+
 # rikai のレポート出力先（会話内容を含みうる）
 .rikai/
 
