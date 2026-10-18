@@ -25,6 +25,7 @@ afterEach(cleanupTempDirs);
 
 const OUTSIDE_CONTENT = "outside-content";
 const SUBCOMMAND_REASON = "使い方";
+const ALLOWED_CHARS_SESSION_ID = "Ab_9-z";
 
 describe("flag on/off", () => {
   describe("正常系", () => {
@@ -43,6 +44,39 @@ describe("flag on/off", () => {
       expect(readdirSync(buildActiveDir(configDir))).toStrictEqual([
         SESSION_ID,
       ]);
+    });
+
+    test("on は英数字・ハイフン・アンダースコアの session_id を受け付ける", () => {
+      // Arrange
+      const configDir = createTempDir();
+
+      // Act
+      const result = createFlagResult(["on", ALLOWED_CHARS_SESSION_ID], {
+        configDir,
+      });
+
+      // Assert
+      expect(result).toStrictEqual(SUCCESS_RESULT);
+      expect(
+        existsSync(buildFlagPath(configDir, ALLOWED_CHARS_SESSION_ID)),
+      ).toBe(true);
+    });
+
+    test("off は英数字・ハイフン・アンダースコアの session_id を受け付ける", () => {
+      // Arrange
+      const configDir = createTempDir();
+      createFlag(configDir, ALLOWED_CHARS_SESSION_ID);
+
+      // Act
+      const result = createFlagResult(["off", ALLOWED_CHARS_SESSION_ID], {
+        configDir,
+      });
+
+      // Assert
+      expect(result).toStrictEqual(SUCCESS_RESULT);
+      expect(
+        existsSync(buildFlagPath(configDir, ALLOWED_CHARS_SESSION_ID)),
+      ).toBe(false);
     });
 
     test("on は 2 回実行しても成功し、フラグが 1 つだけ残る", () => {
@@ -174,6 +208,9 @@ describe("flag on/off", () => {
         { command, label: "../x", sessionArgs: ["../x"] },
         { command, label: "a/b", sessionArgs: ["a/b"] },
         { command, label: "a.b", sessionArgs: ["a.b"] },
+        { command, label: "空白を含む", sessionArgs: ["a b"] },
+        { command, label: "末尾の改行", sessionArgs: ["abc\n"] },
+        { command, label: "非 ASCII", sessionArgs: ["あ"] },
         { command, label: "空文字", sessionArgs: [""] },
         { command, label: "省略", sessionArgs: [] },
       ]),

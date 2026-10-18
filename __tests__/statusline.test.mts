@@ -26,6 +26,7 @@ afterEach(cleanupTempDirs);
 const DOTTED_NAME = "a.b";
 const REAL_TARGET_NAME = "real-target";
 const NUMERIC_SESSION_ID = 123;
+const ALLOWED_CHARS_SESSION_ID = "Ab_9-z";
 const SHOWN_RESULT = {
   status: SUCCESS_EXIT_CODE,
   stdout: INDICATOR,
@@ -46,6 +47,21 @@ describe("statusline", () => {
       const result = createStatuslineResult(buildInput(SESSION_ID), {
         configDir,
       });
+
+      // Assert
+      expect(result).toStrictEqual(SHOWN_RESULT);
+    });
+
+    test("英数字・ハイフン・アンダースコアの session_id でも [理解] を出力する", () => {
+      // Arrange
+      const configDir = createTempDir();
+      createFlag(configDir, ALLOWED_CHARS_SESSION_ID);
+
+      // Act
+      const result = createStatuslineResult(
+        buildInput(ALLOWED_CHARS_SESSION_ID),
+        { configDir },
+      );
 
       // Assert
       expect(result).toStrictEqual(SHOWN_RESULT);
@@ -163,6 +179,9 @@ describe("statusline", () => {
       { name: "a/b (パス区切り)", sessionId: "a/b" },
       { name: "a.b (ドット)", sessionId: DOTTED_NAME },
       { name: "空文字", sessionId: "" },
+      { name: "空白を含む", sessionId: "a b" },
+      { name: "末尾の改行", sessionId: "abc\n" },
+      { name: "非 ASCII", sessionId: "あ" },
     ])(
       "session_id が不正な文字を含む ($name) と何も出さない",
       ({ sessionId }) => {
