@@ -1,32 +1,27 @@
-import { spawnSync } from "node:child_process";
+import { mkdirSync, symlinkSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, test } from "vitest";
 import {
-  mkdirSync,
-  mkdtempSync,
-  rmSync,
-  symlinkSync,
-  writeFileSync,
-} from "node:fs";
-import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
-import { afterEach, describe, expect, test } from "vitest";
+  buildActiveDir,
+  buildFlagPath,
+  CONFIG_DIR_ENV,
+  createFlag,
+  createStatuslineResult,
+  createTempDir,
+  DEFAULT_CONFIG_DIR_NAME,
+  EMPTY_FLAG_CONTENT,
+  HOME_ENV,
+  INDICATOR,
+  OTHER_SESSION_ID,
+  OUTSIDE_NAME,
+  RIKAI_DIR_NAME,
+  SESSION_ID,
+  SUCCESS_EXIT_CODE,
+} from "./helpers/scriptTestHelpers.mts";
 
-const SCRIPT_PATH = resolve(
-  import.meta.dirname,
-  "../skills/rikai/scripts/statusline.mts",
-);
-const TEMP_DIR_PREFIX = "rikai-statusline-";
-const RIKAI_DIR_NAME = "rikai";
-const ACTIVE_DIR_NAME = "active";
-const DEFAULT_CONFIG_DIR_NAME = ".claude";
-const CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR";
-const SESSION_ID = "session-1_A";
-const OTHER_SESSION_ID = "session-2";
-const OUTSIDE_NAME = "x";
 const DOTTED_NAME = "a.b";
-const SUCCESS_EXIT_CODE = 0;
-const INDICATOR = "[理解]";
-const FLAG_CONTENT = "1";
 const REAL_TARGET_NAME = "real-target";
+const NUMERIC_SESSION_ID = 123;
 const HIDDEN_RESULT = { status: SUCCESS_EXIT_CODE, stdout: "", stderr: "" };
 const SHOWN_RESULT = {
   status: SUCCESS_EXIT_CODE,
@@ -34,75 +29,80 @@ const SHOWN_RESULT = {
   stderr: "",
 };
 
-const tempDirs: string[] = [];
-
-const createTempDir = (): string => {
-  const dir = mkdtempSync(join(tmpdir(), TEMP_DIR_PREFIX));
-  tempDirs.push(dir);
-  return dir;
-};
-
-const buildActiveDir = (configDir: string): string =>
-  join(configDir, RIKAI_DIR_NAME, ACTIVE_DIR_NAME);
-
-const createFlag = (configDir: string, sessionId: string): string => {
-  const activeDir = buildActiveDir(configDir);
-  mkdirSync(activeDir, { recursive: true });
-  const flagPath = join(activeDir, sessionId);
-  writeFileSync(flagPath, FLAG_CONTENT);
-  return flagPath;
-};
-
-const runStatusline = (stdin: string, env: Record<string, string>) => {
-  const { [CONFIG_DIR_ENV]: _removed, ...baseEnv } = process.env;
-  const result = spawnSync("node", [SCRIPT_PATH], {
-    encoding: "utf8",
-    input: stdin,
-    env: { ...baseEnv, ...env },
-  });
-  return {
-    status: result.status,
-    stdout: result.stdout,
-    stderr: result.stderr,
-  };
-};
-
-const runWithConfigDir = (stdin: string, configDir: string) =>
-  runStatusline(stdin, { [CONFIG_DIR_ENV]: configDir });
-
 const buildInput = (sessionId: unknown): string =>
   JSON.stringify({ session_id: sessionId });
 
-afterEach(() => {
-  for (const dir of tempDirs.splice(0)) {
-    rmSync(dir, { recursive: true, force: true });
-  }
-});
-
 describe("statusline", () => {
   test("フラグがあるセッションでは [理解] だけを改行なしで出力する", () => {
+    // Arrange
     const configDir = createTempDir();
     createFlag(configDir, SESSION_ID);
 
-    const result = runWithConfigDir(buildInput(SESSION_ID), configDir);
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
 
+    // Assert
+    expect(result).toStrictEqual(SHOWN_RESULT);
+  });
+
+  test("session_id 以外のフィールドを含む JSON でも [理解] を出力する", () => {
+    // Arrange
+    const configDir = createTempDir();
+    createFlag(configDir, SESSION_ID);
+    const input = JSON.stringify({
+      session_id: SESSION_ID,
+      model: { id: "m", display_name: "M" },
+      workspace: { current_dir: "/work" },
+      other: 1,
+    });
+
+    // Act
+    const result = createStatuslineResult(input, { configDir });
+
+    // Assert
     expect(result).toStrictEqual(SHOWN_RESULT);
   });
 
   test("フラグが無ければ何も出さない", () => {
+    // Arrange
     const configDir = createTempDir();
 
-    const result = runWithConfigDir(buildInput(SESSION_ID), configDir);
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
 
+    // Assert
     expect(result).toStrictEqual(HIDDEN_RESULT);
   });
 
   test("別セッションのフラグしか無ければ何も出さない", () => {
+    // Arrange
     const configDir = createTempDir();
     createFlag(configDir, OTHER_SESSION_ID);
 
-    const result = runWithConfigDir(buildInput(SESSION_ID), configDir);
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
 
+    // Assert
+    expect(result).toStrictEqual(HIDDEN_RESULT);
+  });
+
+  test("フラグの位置が空ディレクトリなら何も出さない", () => {
+    // Arrange
+    const configDir = createTempDir();
+    mkdirSync(buildFlagPath(configDir, SESSION_ID), { recursive: true });
+
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
+
+    // Assert
     expect(result).toStrictEqual(HIDDEN_RESULT);
   });
 
@@ -110,14 +110,21 @@ describe("statusline", () => {
     { name: "不正な JSON", stdin: "{not json" },
     { name: "空の標準入力", stdin: "" },
     { name: "session_id の欠落", stdin: JSON.stringify({ other: 1 }) },
-    { name: "数値の session_id", stdin: buildInput(123) },
+    { name: "数値の session_id", stdin: buildInput(NUMERIC_SESSION_ID) },
+    { name: "null", stdin: "null" },
+    { name: "空配列", stdin: "[]" },
+    { name: "文字列", stdin: JSON.stringify(SESSION_ID) },
+    { name: "数値", stdin: JSON.stringify(NUMERIC_SESSION_ID) },
   ])("$name では何も出さない", ({ stdin }) => {
+    // Arrange
     const configDir = createTempDir();
     createFlag(configDir, SESSION_ID);
-    createFlag(configDir, "123");
+    createFlag(configDir, String(NUMERIC_SESSION_ID));
 
-    const result = runWithConfigDir(stdin, configDir);
+    // Act
+    const result = createStatuslineResult(stdin, { configDir });
 
+    // Assert
     expect(result).toStrictEqual(HIDDEN_RESULT);
   });
 
@@ -129,63 +136,94 @@ describe("statusline", () => {
   ])(
     "session_id が不正な文字を含む ($name) と何も出さない",
     ({ sessionId }) => {
+      // Arrange
       const configDir = createTempDir();
       const activeDir = buildActiveDir(configDir);
       createFlag(configDir, DOTTED_NAME);
-      writeFileSync(join(activeDir, "..", OUTSIDE_NAME), FLAG_CONTENT);
+      writeFileSync(join(activeDir, "..", OUTSIDE_NAME), EMPTY_FLAG_CONTENT);
       mkdirSync(join(activeDir, "a"), { recursive: true });
-      writeFileSync(join(activeDir, "a", "b"), FLAG_CONTENT);
+      writeFileSync(join(activeDir, "a", "b"), EMPTY_FLAG_CONTENT);
 
-      const result = runWithConfigDir(buildInput(sessionId), configDir);
+      // Act
+      const result = createStatuslineResult(buildInput(sessionId), {
+        configDir,
+      });
 
+      // Assert
       expect(result).toStrictEqual(HIDDEN_RESULT);
     },
   );
 
   test("フラグが symlink なら何も出さない", () => {
+    // Arrange
     const configDir = createTempDir();
-    const activeDir = buildActiveDir(configDir);
-    mkdirSync(activeDir, { recursive: true });
+    mkdirSync(buildActiveDir(configDir), { recursive: true });
     const targetPath = join(configDir, REAL_TARGET_NAME);
-    writeFileSync(targetPath, FLAG_CONTENT);
-    symlinkSync(targetPath, join(activeDir, SESSION_ID));
+    writeFileSync(targetPath, EMPTY_FLAG_CONTENT);
+    symlinkSync(targetPath, buildFlagPath(configDir, SESSION_ID));
 
-    const result = runWithConfigDir(buildInput(SESSION_ID), configDir);
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
 
+    // Assert
     expect(result).toStrictEqual(HIDDEN_RESULT);
   });
 
   test("active/ が symlink なら何も出さない", () => {
+    // Arrange
     const configDir = createTempDir();
     const realActiveDir = join(configDir, REAL_TARGET_NAME);
     mkdirSync(realActiveDir, { recursive: true });
-    writeFileSync(join(realActiveDir, SESSION_ID), FLAG_CONTENT);
+    writeFileSync(join(realActiveDir, SESSION_ID), EMPTY_FLAG_CONTENT);
     mkdirSync(join(configDir, RIKAI_DIR_NAME), { recursive: true });
     symlinkSync(realActiveDir, buildActiveDir(configDir));
 
-    const result = runWithConfigDir(buildInput(SESSION_ID), configDir);
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
 
+    // Assert
     expect(result).toStrictEqual(HIDDEN_RESULT);
   });
 
   test("rikai/ が symlink なら何も出さない", () => {
+    // Arrange
     const configDir = createTempDir();
-    const realRikaiDir = join(configDir, REAL_TARGET_NAME);
-    createFlag(realRikaiDir, SESSION_ID);
-    const realRikaiRoot = join(realRikaiDir, RIKAI_DIR_NAME);
-    symlinkSync(realRikaiRoot, join(configDir, RIKAI_DIR_NAME));
+    const realBaseDir = join(configDir, REAL_TARGET_NAME);
+    createFlag(realBaseDir, SESSION_ID);
+    symlinkSync(
+      join(realBaseDir, RIKAI_DIR_NAME),
+      join(configDir, RIKAI_DIR_NAME),
+    );
 
-    const result = runWithConfigDir(buildInput(SESSION_ID), configDir);
+    // Act
+    const result = createStatuslineResult(buildInput(SESSION_ID), {
+      configDir,
+    });
 
+    // Assert
     expect(result).toStrictEqual(HIDDEN_RESULT);
   });
 
-  test("CLAUDE_CONFIG_DIR が未設定なら HOME 配下の .claude を使う", () => {
-    const homeDir = createTempDir();
-    createFlag(join(homeDir, DEFAULT_CONFIG_DIR_NAME), SESSION_ID);
+  test.each([
+    { name: "未設定", configDirEnv: undefined },
+    { name: "空文字", configDirEnv: "" },
+  ])(
+    "CLAUDE_CONFIG_DIR が$nameなら HOME 配下の .claude を使う",
+    ({ configDirEnv }) => {
+      // Arrange
+      const homeDir = createTempDir();
+      createFlag(join(homeDir, DEFAULT_CONFIG_DIR_NAME), SESSION_ID);
+      const env = { [HOME_ENV]: homeDir, [CONFIG_DIR_ENV]: configDirEnv };
 
-    const result = runStatusline(buildInput(SESSION_ID), { HOME: homeDir });
+      // Act
+      const result = createStatuslineResult(buildInput(SESSION_ID), { env });
 
-    expect(result).toStrictEqual(SHOWN_RESULT);
-  });
+      // Assert
+      expect(result).toStrictEqual(SHOWN_RESULT);
+    },
+  );
 });

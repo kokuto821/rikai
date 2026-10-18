@@ -1,69 +1,73 @@
-import { spawnSync } from "node:child_process";
-import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
+import {
+  buildRejectedResult,
+  createPickResult,
+  SUCCESS_EXIT_CODE,
+} from "./helpers/scriptTestHelpers.mts";
 
-const SCRIPT_PATH = resolve(
-  import.meta.dirname,
-  "../skills/rikai/scripts/pick.mts",
-);
-const SUGGESTION_THRESHOLD = "0.5";
-const JUST_BELOW_THRESHOLD = "0.4999";
-const LOWER_BOUND = "0";
-const JUST_BELOW_UPPER_BOUND = "0.9999";
-const SUCCESS_EXIT_CODE = 0;
-const FAILURE_EXIT_CODE = 1;
 const SUGGESTION_OUTPUT = "suggestion\n";
 const QUIZ_OUTPUT = "quiz\n";
-const MODULE_NOT_FOUND_MESSAGES = [
-  "Cannot find module",
-  "ERR_MODULE_NOT_FOUND",
+const HIGH_RANDOM = "0.9";
+const LOW_RANDOM = "0.1";
+
+// Math.random を固定値に差し替える --import 用の data: URL。
+const buildFixedRandomNodeArgs = (value: string): string[] => [
+  "--import",
+  `data:text/javascript,Math.random%3D()%3D%3E${value}`,
 ];
 
-const runPick = (args: string[]) => {
-  const result = spawnSync("node", [SCRIPT_PATH, ...args], {
-    encoding: "utf8",
-  });
-  return {
-    status: result.status,
-    stdout: result.stdout,
-    stderr: result.stderr,
-  };
-};
+const buildSuccessResult = (stdout: string) => ({
+  status: SUCCESS_EXIT_CODE,
+  stdout,
+  stderr: "",
+});
 
 describe("pick", () => {
   test.each([
     {
       name: "0.5 (境界) は suggestion",
-      value: SUGGESTION_THRESHOLD,
+      value: "0.5",
       expected: SUGGESTION_OUTPUT,
     },
     {
       name: "0.9999 は suggestion",
-      value: JUST_BELOW_UPPER_BOUND,
+      value: "0.9999",
       expected: SUGGESTION_OUTPUT,
     },
     {
-      name: "0.4999 は quiz",
-      value: JUST_BELOW_THRESHOLD,
-      expected: QUIZ_OUTPUT,
+      name: "0.9999999999999999 (1 の直前) は suggestion",
+      value: "0.9999999999999999",
+      expected: SUGGESTION_OUTPUT,
     },
-    { name: "0 は quiz", value: LOWER_BOUND, expected: QUIZ_OUTPUT },
+    { name: "0.4999 は quiz", value: "0.4999", expected: QUIZ_OUTPUT },
+    { name: "0 は quiz", value: "0", expected: QUIZ_OUTPUT },
   ])("$name", ({ value, expected }) => {
-    const result = runPick([value]);
+    // Arrange
+    const args = [value];
 
-    expect(result).toStrictEqual({
-      status: SUCCESS_EXIT_CODE,
-      stdout: expected,
-      stderr: "",
-    });
+    // Act
+    const result = createPickResult(args);
+
+    // Assert
+    expect(result).toStrictEqual(buildSuccessResult(expected));
   });
 
-  test("引数を省略すると suggestion か quiz のどちらかを出力する", () => {
-    const result = runPick([]);
+  test.each([
+    {
+      name: "0.9 なら suggestion",
+      random: HIGH_RANDOM,
+      expected: SUGGESTION_OUTPUT,
+    },
+    { name: "0.1 なら quiz", random: LOW_RANDOM, expected: QUIZ_OUTPUT },
+  ])("引数を省略すると乱数が $name", ({ random, expected }) => {
+    // Arrange
+    const options = { nodeArgs: buildFixedRandomNodeArgs(random) };
 
-    expect(result.status).toBe(SUCCESS_EXIT_CODE);
-    expect([SUGGESTION_OUTPUT, QUIZ_OUTPUT]).toContain(result.stdout);
-    expect(result.stderr).toBe("");
+    // Act
+    const result = createPickResult([], options);
+
+    // Assert
+    expect(result).toStrictEqual(buildSuccessResult(expected));
   });
 
   test.each([
@@ -71,17 +75,27 @@ describe("pick", () => {
     { name: "NaN", args: ["NaN"] },
     { name: "負数 (-0.1)", args: ["-0.1"] },
     { name: "1 (上限を含まない)", args: ["1"] },
+    { name: "1.0 (上限を含まない)", args: ["1.0"] },
     { name: "範囲外 (1.5)", args: ["1.5"] },
     { name: "空文字", args: [""] },
+    { name: "整数部の省略 (.5)", args: [".5"] },
+    { name: "指数表記 (1e-1)", args: ["1e-1"] },
+    { name: "符号つき (+0.5)", args: ["+0.5"] },
+    { name: "小数部の省略 (0.)", args: ["0."] },
+    { name: "負のゼロ (-0)", args: ["-0"] },
+    { name: "16 進数 (0x1)", args: ["0x1"] },
+    { name: "Infinity", args: ["Infinity"] },
+    { name: "前に空白 ( 0.5)", args: [" 0.5"] },
+    { name: "後ろに改行 (0.5 と改行)", args: ["0.5\n"] },
     { name: "引数が 2 個", args: ["0.1", "0.2"] },
   ])("不正な引数 $name はエラー終了する", ({ args }) => {
-    const result = runPick(args);
+    // Arrange
+    const expected = buildRejectedResult();
 
-    expect(result.status).toBe(FAILURE_EXIT_CODE);
-    expect(result.stdout).toBe("");
-    expect(result.stderr.trim()).not.toBe("");
-    for (const message of MODULE_NOT_FOUND_MESSAGES) {
-      expect(result.stderr).not.toContain(message);
-    }
+    // Act
+    const result = createPickResult(args);
+
+    // Assert
+    expect(result).toStrictEqual(expected);
   });
 });
