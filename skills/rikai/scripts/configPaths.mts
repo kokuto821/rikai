@@ -6,8 +6,6 @@ const DEFAULT_CONFIG_DIR_NAME = ".claude";
 const RIKAI_DIR_NAME = "rikai";
 const ACTIVE_DIR_NAME = "active";
 
-export const SESSION_ID_PATTERN = /^[A-Za-z0-9_-]+$/;
-
 /**
  * Claude Code の設定ディレクトリを絶対パスで返す。
  * `CLAUDE_CONFIG_DIR` があればそれを使い、無ければ `~/.claude` を使う。
@@ -38,7 +36,7 @@ export const buildActiveDir = (): string =>
 /**
  * セッションのフラグファイルのパスを返す。
  *
- * @param sessionId - セッション ID。呼び出し側で `SESSION_ID_PATTERN` を検証しておく。
+ * @param sessionId - セッション ID。呼び出し側で `parseSessionId` を通しておく。
  * @returns フラグファイルの絶対パス
  */
 export const buildFlagPath = (sessionId: string): string =>

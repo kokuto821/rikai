@@ -5,9 +5,10 @@ import {
   buildActiveDir,
   buildFlagPath,
   buildRikaiDir,
-  SESSION_ID_PATTERN,
 } from "./configPaths.mts";
 import { isSymlink } from "./fsReal.mts";
+import { parseSessionId } from "./utils/sessionId.mts";
+import { buildSnippet } from "./utils/snippet.mts";
 
 const STATUSLINE_NAME = "statusline.mts";
 const FLAG_FILE_CONTENT = "";
@@ -17,22 +18,6 @@ const COMMAND_OFF = "off";
 const COMMAND_INSTALL = "install";
 const USAGE =
   "使い方: flag.mts <on|off|install> [session_id]（サブコマンドは on・off・install のいずれかを指定してください）";
-
-/**
- * 引数の session_id を検証して返す。
- *
- * @param raw - コマンドライン引数の session_id
- * @returns 検証済みの session_id
- * @throws 未指定、または英数字・ハイフン・アンダースコア以外を含むとき
- */
-const parseSessionId = (raw: string | undefined): string => {
-  if (raw === undefined || !SESSION_ID_PATTERN.test(raw)) {
-    throw new Error(
-      `session_id は英数字・ハイフン・アンダースコアのみ指定できます: "${raw ?? ""}"`,
-    );
-  }
-  return raw;
-};
 
 /**
  * パスが symlink なら例外を投げる。リンク先が無い symlink も対象。
@@ -88,29 +73,6 @@ const runOff = (sessionId: string): void => {
 };
 
 /**
- * settings.json に追記する statusLine のスニペットと案内文を組み立てる。
- *
- * @param copyPath - コピーした statusline.mts の絶対パス
- * @returns 標準出力に出す案内文（JSON スニペットを含む）
- */
-const buildSnippet = (copyPath: string): string => {
-  const settings = {
-    statusLine: {
-      type: "command",
-      command: `node "${copyPath}"`,
-    },
-  };
-  return [
-    "次の内容を settings.json に追記してください。",
-    "",
-    JSON.stringify(settings, null, 2),
-    "",
-    "すでに statusLine がある場合は、置き換えずにコマンドを連結してください。",
-    "",
-  ].join("\n");
-};
-
-/**
  * `install`: statusline.mts を `rikai/` にコピーし、追記用スニペットを返す。
  * コピー先が既にあれば上書きする。settings.json は読み書きしない。
  *
@@ -157,4 +119,16 @@ const run = (args: string[]): string => {
   }
 };
 
+/**
+ * バッジ用フラグの書き換えと、statusline の導入を行う。
+ *
+ * 使い方: `node flag.mts <on|off|install> [session_id]`
+ *
+ * - `on <session_id>`: フラグファイルを作る。
+ * - `off <session_id>`: フラグファイルを削除する。
+ * - `install`: statusline.mts を設定ディレクトリの `rikai/` にコピーし、
+ *   settings.json に追記するスニペットを標準出力に出す。
+ *
+ * 失敗したら、標準エラーにメッセージを出して終了コード 1 で終わる。
+ */
 runCli(() => run(process.argv.slice(2)));

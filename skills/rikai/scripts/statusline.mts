@@ -95,6 +95,13 @@ const isRealFile = (path: string): boolean => {
   return stats?.isFile() === true && !stats.isSymbolicLink();
 };
 
+/**
+ * statusline に出す `[理解]` バッジを標準出力に書く。
+ *
+ * 標準入力の JSON の `session_id` に対応するフラグファイルが実体として
+ * あるときだけ、改行なしで `[理解]` を出す。他の statusline と連結できるよう、
+ * それ以外は何も出さない。どんな失敗でも例外を外に出さず、終了コードは 0 になる。
+ */
 try {
   const sessionId = readSessionId(readFileSync(STDIN_FD, "utf8"));
   if (sessionId !== undefined) {
