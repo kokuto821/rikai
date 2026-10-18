@@ -27,15 +27,11 @@ const readSessionId = (raw: string): string | undefined => {
   return sessionId;
 };
 
-const isRealDirectory = (path: string): boolean => {
-  const stats = lstatSync(path);
-  return stats.isDirectory() && !stats.isSymbolicLink();
-};
+// lstat は symlink をたどらないため、isDirectory と isFile は symlink で false になる。
+const isRealDirectory = (path: string): boolean =>
+  lstatSync(path).isDirectory();
 
-const isRealFile = (path: string): boolean => {
-  const stats = lstatSync(path);
-  return stats.isFile() && !stats.isSymbolicLink();
-};
+const isRealFile = (path: string): boolean => lstatSync(path).isFile();
 
 try {
   const sessionId = readSessionId(readFileSync(STDIN_FD, "utf8"));

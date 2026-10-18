@@ -37,49 +37,42 @@ const buildSnippet = (copyPath: string) => ({
   statusLine: { type: "command", command: buildCommand(copyPath) },
 });
 
-const buildSnippetObject = (stdout: string): unknown => {
+const splitSnippet = (stdout: string) => {
   const firstBrace = stdout.indexOf("{");
   const lastBrace = stdout.lastIndexOf("}");
-  return JSON.parse(stdout.slice(firstBrace, lastBrace + 1));
+  return {
+    before: stdout.slice(0, firstBrace),
+    json: stdout.slice(firstBrace, lastBrace + 1),
+    after: stdout.slice(lastBrace + 1),
+  };
 };
 
+const buildSnippetObject = (stdout: string): unknown =>
+  JSON.parse(splitSnippet(stdout).json);
+
 describe("flag install", () => {
-  test("install は statusline.mts を rikai/ にコピーする", () => {
+  test.each([
+    {
+      name: "install は statusline.mts を rikai/ にコピーする",
+      prepare: (_configDir: string) => {},
+    },
+    {
+      name: "install はコピー先が既にあれば上書きする",
+      prepare: (configDir: string) => {
+        mkdirSync(buildRikaiDir(configDir), { recursive: true });
+        writeFileSync(buildCopyPath(configDir), OLD_COPY_CONTENT);
+      },
+    },
+    {
+      name: "install は 2 回実行しても成功する",
+      prepare: (configDir: string) => {
+        createFlagResult(["install"], { configDir });
+      },
+    },
+  ])("$name", ({ prepare }) => {
     // Arrange
     const configDir = createTempDir();
-
-    // Act
-    const result = createFlagResult(["install"], { configDir });
-
-    // Assert
-    expect(result.status).toBe(SUCCESS_EXIT_CODE);
-    expect(result.stderr).toBe("");
-    expect(readFileSync(buildCopyPath(configDir), "utf8")).toBe(
-      readFileSync(STATUSLINE_SCRIPT_PATH, "utf8"),
-    );
-  });
-
-  test("install はコピー先が既にあれば上書きする", () => {
-    // Arrange
-    const configDir = createTempDir();
-    mkdirSync(buildRikaiDir(configDir), { recursive: true });
-    writeFileSync(buildCopyPath(configDir), OLD_COPY_CONTENT);
-
-    // Act
-    const result = createFlagResult(["install"], { configDir });
-
-    // Assert
-    expect(result.status).toBe(SUCCESS_EXIT_CODE);
-    expect(result.stderr).toBe("");
-    expect(readFileSync(buildCopyPath(configDir), "utf8")).toBe(
-      readFileSync(STATUSLINE_SCRIPT_PATH, "utf8"),
-    );
-  });
-
-  test("install は 2 回実行しても成功する", () => {
-    // Arrange
-    const configDir = createTempDir();
-    createFlagResult(["install"], { configDir });
+    prepare(configDir);
 
     // Act
     const result = createFlagResult(["install"], { configDir });
@@ -100,15 +93,14 @@ describe("flag install", () => {
     const result = createFlagResult(["install"], { configDir });
 
     // Assert
-    const firstBrace = result.stdout.indexOf("{");
-    const lastBrace = result.stdout.lastIndexOf("}");
+    const { before, after } = splitSnippet(result.stdout);
     expect(result.status).toBe(SUCCESS_EXIT_CODE);
     expect(result.stderr).toBe("");
     expect(buildSnippetObject(result.stdout)).toStrictEqual(
       buildSnippet(buildCopyPath(configDir)),
     );
-    expect(result.stdout.slice(0, firstBrace).trim()).not.toBe("");
-    expect(result.stdout.slice(lastBrace + 1).trim()).not.toBe("");
+    expect(before.trim()).not.toBe("");
+    expect(after.trim()).not.toBe("");
   });
 
   test("install はパスに空白を含んでもコマンドを引用符で囲む", () => {

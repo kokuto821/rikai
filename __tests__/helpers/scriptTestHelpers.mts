@@ -13,23 +13,20 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, expect } from "vitest";
 
-export const SCRIPTS_DIR = resolve(
-  import.meta.dirname,
-  "../../skills/rikai/scripts",
-);
-export const PICK_SCRIPT_PATH = join(SCRIPTS_DIR, "pick.mts");
-export const FLAG_SCRIPT_PATH = join(SCRIPTS_DIR, "flag.mts");
+const SCRIPTS_DIR = resolve(import.meta.dirname, "../../skills/rikai/scripts");
+const PICK_SCRIPT_PATH = join(SCRIPTS_DIR, "pick.mts");
+const FLAG_SCRIPT_PATH = join(SCRIPTS_DIR, "flag.mts");
 export const STATUSLINE_SCRIPT_PATH = join(SCRIPTS_DIR, "statusline.mts");
 
 export const SUCCESS_EXIT_CODE = 0;
-export const FAILURE_EXIT_CODE = 1;
+const FAILURE_EXIT_CODE = 1;
 export const CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR";
 export const HOME_ENV = "HOME";
-export const USERPROFILE_ENV = "USERPROFILE";
+const USERPROFILE_ENV = "USERPROFILE";
 export const RIKAI_DIR_NAME = "rikai";
 export const ACTIVE_DIR_NAME = "active";
 export const DEFAULT_CONFIG_DIR_NAME = ".claude";
-export const STATUSLINE_NAME = "statusline.mts";
+const STATUSLINE_NAME = "statusline.mts";
 export const SETTINGS_NAME = "settings.json";
 export const SESSION_ID = "session-1_A";
 export const OTHER_SESSION_ID = "session-2";
@@ -38,13 +35,13 @@ export const INDICATOR = "[理解]";
 export const EMPTY_FLAG_CONTENT = "";
 export const SYMLINK_REASON = "symlink";
 export const SESSION_ID_REASON = "session_id";
-export const MISSING_SNAPSHOT = "<missing>";
+const MISSING_SNAPSHOT = "<missing>";
 export const SUCCESS_RESULT = {
   status: SUCCESS_EXIT_CODE,
   stdout: "",
   stderr: "",
 };
-export const MODULE_NOT_FOUND_MESSAGES = [
+const MODULE_NOT_FOUND_MESSAGES = [
   "Cannot find module",
   "ERR_MODULE_NOT_FOUND",
 ];
@@ -52,13 +49,13 @@ export const MODULE_NOT_FOUND_MESSAGES = [
 const TEMP_DIR_PREFIX = "rikai-test-";
 const UTF8 = "utf8";
 
-export type ScriptResult = {
+type ScriptResult = {
   status: number | null;
   stdout: string;
   stderr: string;
 };
 
-export type ScriptOptions = {
+type ScriptOptions = {
   // CLAUDE_CONFIG_DIR に渡すディレクトリ。省略すると空の一時ディレクトリを使う。
   configDir?: string;
   // 既定の環境変数を上書きする。値が undefined のキーは削除する。
