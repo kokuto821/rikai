@@ -1,42 +1,22 @@
+import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { runCli } from "./cli.mts";
 import {
-  copyFileSync,
-  lstatSync,
-  mkdirSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
-import { homedir } from "node:os";
-import { join, resolve } from "node:path";
+  buildActiveDir,
+  buildFlagPath,
+  buildRikaiDir,
+  SESSION_ID_PATTERN,
+} from "./configPaths.mts";
+import { isSymlink } from "./fsReal.mts";
 
-const FAILURE_EXIT_CODE = 1;
-const CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR";
-const DEFAULT_CONFIG_DIR_NAME = ".claude";
-const RIKAI_DIR_NAME = "rikai";
-const ACTIVE_DIR_NAME = "active";
 const STATUSLINE_NAME = "statusline.mts";
-const SESSION_ID_PATTERN = /^[A-Za-z0-9_-]+$/;
-const NOT_FOUND_CODE = "ENOENT";
-const JSON_INDENT = 2;
-const EMPTY_CONTENT = "";
+const FLAG_FILE_CONTENT = "";
+const NO_STDOUT_OUTPUT = "";
 const COMMAND_ON = "on";
 const COMMAND_OFF = "off";
 const COMMAND_INSTALL = "install";
 const USAGE =
   "使い方: flag.mts <on|off|install> [session_id]（サブコマンドは on・off・install のいずれかを指定してください）";
-const STATUSLINE_KEY = "statusLine";
-const STATUSLINE_TYPE_KEY = "type";
-const STATUSLINE_TYPE_COMMAND = "command";
-const STATUSLINE_COMMAND_KEY = "command";
-const NODE_COMMAND = "node";
-
-const resolveConfigDir = (): string => {
-  const fromEnv = process.env[CONFIG_DIR_ENV];
-  return resolve(fromEnv ? fromEnv : join(homedir(), DEFAULT_CONFIG_DIR_NAME));
-};
-
-const buildRikaiDir = (): string => join(resolveConfigDir(), RIKAI_DIR_NAME);
-
-const buildActiveDir = (): string => join(buildRikaiDir(), ACTIVE_DIR_NAME);
 
 const parseSessionId = (raw: string | undefined): string => {
   if (raw === undefined || !SESSION_ID_PATTERN.test(raw)) {
@@ -45,17 +25,6 @@ const parseSessionId = (raw: string | undefined): string => {
     );
   }
   return raw;
-};
-
-const isSymlink = (path: string): boolean => {
-  try {
-    return lstatSync(path).isSymbolicLink();
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === NOT_FOUND_CODE) {
-      return false;
-    }
-    throw error;
-  }
 };
 
 const assertNotSymlink = (path: string): void => {
@@ -68,14 +37,16 @@ const resolveFlagPath = (sessionId: string): string => {
   const activeDir = buildActiveDir();
   assertNotSymlink(buildRikaiDir());
   assertNotSymlink(activeDir);
-  return join(activeDir, sessionId);
+  return buildFlagPath(sessionId);
 };
 
 const runOn = (sessionId: string): void => {
   const flagPath = resolveFlagPath(sessionId);
   mkdirSync(buildActiveDir(), { recursive: true });
+  // symlink チェックと書き込みの間に別プロセスが差し替える可能性は残る（TOCTOU）。
+  // ローカル開発環境での単一ユーザー利用を前提に許容している。
   assertNotSymlink(flagPath);
-  writeFileSync(flagPath, EMPTY_CONTENT);
+  writeFileSync(flagPath, FLAG_FILE_CONTENT);
 };
 
 const runOff = (sessionId: string): void => {
@@ -86,21 +57,23 @@ const runOff = (sessionId: string): void => {
 
 const buildSnippet = (copyPath: string): string => {
   const settings = {
-    [STATUSLINE_KEY]: {
-      [STATUSLINE_TYPE_KEY]: STATUSLINE_TYPE_COMMAND,
-      [STATUSLINE_COMMAND_KEY]: `${NODE_COMMAND} "${copyPath}"`,
+    statusLine: {
+      type: "command",
+      command: `node "${copyPath}"`,
     },
   };
   return [
     "次の内容を settings.json に追記してください。",
     "",
-    JSON.stringify(settings, null, JSON_INDENT),
+    JSON.stringify(settings, null, 2),
     "",
     "すでに statusLine がある場合は、置き換えずにコマンドを連結してください。",
     "",
   ].join("\n");
 };
 
+// install は「statusline.mts の配置」と「settings.json 用スニペットの生成」という
+// flag の on/off とは別の関心事を担う。セットアップを1コマンドに収めるためここに置く。
 const runInstall = (): string => {
   const rikaiDir = buildRikaiDir();
   const copyPath = join(rikaiDir, STATUSLINE_NAME);
@@ -116,10 +89,10 @@ const run = (args: string[]): string => {
   switch (command) {
     case COMMAND_ON:
       runOn(parseSessionId(rest[0]));
-      return EMPTY_CONTENT;
+      return NO_STDOUT_OUTPUT;
     case COMMAND_OFF:
       runOff(parseSessionId(rest[0]));
-      return EMPTY_CONTENT;
+      return NO_STDOUT_OUTPUT;
     case COMMAND_INSTALL:
       if (rest.length > 0) {
         throw new Error("install に引数は指定できません。");
@@ -130,10 +103,4 @@ const run = (args: string[]): string => {
   }
 };
 
-try {
-  process.stdout.write(run(process.argv.slice(2)));
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`${message}\n`);
-  process.exit(FAILURE_EXIT_CODE);
-}
+runCli(() => run(process.argv.slice(2)));

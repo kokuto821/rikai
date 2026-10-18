@@ -1,5 +1,6 @@
+import { runCli } from "./cli.mts";
+
 const SUGGESTION_THRESHOLD = 0.5;
-const FAILURE_EXIT_CODE = 1;
 const DECIMAL_PATTERN = /^\d+(\.\d+)?$/;
 const SUGGESTION_OUTPUT = "suggestion";
 const QUIZ_OUTPUT = "quiz";
@@ -19,13 +20,7 @@ const parseRandom = (args: string[]): number => {
   return value;
 };
 
-try {
+runCli(() => {
   const random = parseRandom(process.argv.slice(2));
-  process.stdout.write(
-    `${random >= SUGGESTION_THRESHOLD ? SUGGESTION_OUTPUT : QUIZ_OUTPUT}\n`,
-  );
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`${message}\n`);
-  process.exit(FAILURE_EXIT_CODE);
-}
+  return `${random >= SUGGESTION_THRESHOLD ? SUGGESTION_OUTPUT : QUIZ_OUTPUT}\n`;
+});
