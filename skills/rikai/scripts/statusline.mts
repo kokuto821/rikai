@@ -16,14 +16,33 @@ const NOT_FOUND_CODE = "ENOENT";
 // そのため configPaths.mts・fsReal.mts（flag.mts 用の共通モジュール）を
 // import できず、同じロジックをここに複製している。
 
+/**
+ * Claude Code の設定ディレクトリを絶対パスで返す。
+ * `CLAUDE_CONFIG_DIR` があればそれを使い、無ければ `~/.claude` を使う。
+ *
+ * @returns 設定ディレクトリの絶対パス
+ */
 const resolveConfigDir = (): string => {
   const fromEnv = process.env[CONFIG_DIR_ENV];
   return resolve(fromEnv ? fromEnv : join(homedir(), DEFAULT_CONFIG_DIR_NAME));
 };
 
+/**
+ * 値がオブジェクト（null 以外）かを判定する型ガード。
+ *
+ * @param value - 判定する値
+ * @returns オブジェクトなら true
+ */
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
+/**
+ * 標準入力の JSON から session_id を取り出す。
+ *
+ * @param raw - 標準入力の JSON 文字列
+ * @returns `SESSION_ID_PATTERN` に合う session_id。無い・不正なら `undefined`
+ * @throws raw が JSON として解析できないとき
+ */
 const readSessionId = (raw: string): string | undefined => {
   const parsed: unknown = JSON.parse(raw);
   if (!isRecord(parsed)) {
@@ -36,6 +55,13 @@ const readSessionId = (raw: string): string | undefined => {
   return sessionId;
 };
 
+/**
+ * symlink をたどらずに `lstat` する。パスが無ければ `undefined` を返す。
+ *
+ * @param path - 調べるパス
+ * @returns `Stats`。パスが存在しなければ `undefined`
+ * @throws ENOENT 以外の `lstat` のエラーはそのまま投げる。
+ */
 const lstatOrNull = (path: string): Stats | undefined => {
   try {
     return lstatSync(path);
@@ -47,11 +73,23 @@ const lstatOrNull = (path: string): Stats | undefined => {
   }
 };
 
+/**
+ * パスが symlink ではない実体のディレクトリかを返す。
+ *
+ * @param path - 調べるパス
+ * @returns 実体のディレクトリなら true
+ */
 const isRealDirectory = (path: string): boolean => {
   const stats = lstatOrNull(path);
   return stats?.isDirectory() === true && !stats.isSymbolicLink();
 };
 
+/**
+ * パスが symlink ではない実体の通常ファイルかを返す。
+ *
+ * @param path - 調べるパス
+ * @returns 実体の通常ファイルなら true
+ */
 const isRealFile = (path: string): boolean => {
   const stats = lstatOrNull(path);
   return stats?.isFile() === true && !stats.isSymbolicLink();
