@@ -40,7 +40,7 @@ issue駆動開発を採用する。リポジトリに残る変更（コード・
 
 ## Script Development
 
-スクリプト（`.mts`）の開発はTDDで実装する（`matagi:tdd`）。テストはvitestを用いる。`tests/` の配置とスクリプトの方針は、`rikai-skill-spec` の `design.md`「スクリプトの実装方針」「リポジトリの目標構成」を参照する。
+スクリプト（`.mts`）の開発はTDDで実装する（`matagi:tdd`）。テストはvitestを用い、リポジトリ直下の `__tests__/` に置く。スクリプトの方針は、`rikai-skill-spec` の `design.md`「スクリプトの実装方針」「リポジトリの目標構成」を参照する（`design.md` の `tests/` は `__tests__/` に読み替える）。型検査は `npm run typecheck`、lintは `npm run lint`（Biome）で行う。
 
 ## Writing
 
