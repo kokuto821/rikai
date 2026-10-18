@@ -6,7 +6,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 const FAILURE_EXIT_CODE = 1;
 const CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR";
@@ -21,11 +21,17 @@ const EMPTY_CONTENT = "";
 const COMMAND_ON = "on";
 const COMMAND_OFF = "off";
 const COMMAND_INSTALL = "install";
-const USAGE = "使い方: flag.mts <on|off|install> [session_id]";
+const USAGE =
+  "使い方: flag.mts <on|off|install> [session_id]（サブコマンドは on・off・install のいずれかを指定してください）";
+const STATUSLINE_KEY = "statusLine";
+const STATUSLINE_TYPE_KEY = "type";
+const STATUSLINE_TYPE_COMMAND = "command";
+const STATUSLINE_COMMAND_KEY = "command";
+const NODE_COMMAND = "node";
 
 const resolveConfigDir = (): string => {
   const fromEnv = process.env[CONFIG_DIR_ENV];
-  return fromEnv ? fromEnv : join(homedir(), DEFAULT_CONFIG_DIR_NAME);
+  return resolve(fromEnv ? fromEnv : join(homedir(), DEFAULT_CONFIG_DIR_NAME));
 };
 
 const buildRikaiDir = (): string => join(resolveConfigDir(), RIKAI_DIR_NAME);
@@ -58,28 +64,32 @@ const assertNotSymlink = (path: string): void => {
   }
 };
 
-const runOn = (sessionId: string): void => {
+const resolveFlagPath = (sessionId: string): string => {
   const activeDir = buildActiveDir();
-  const flagPath = join(activeDir, sessionId);
   assertNotSymlink(buildRikaiDir());
   assertNotSymlink(activeDir);
-  mkdirSync(activeDir, { recursive: true });
+  return join(activeDir, sessionId);
+};
+
+const runOn = (sessionId: string): void => {
+  const flagPath = resolveFlagPath(sessionId);
+  mkdirSync(buildActiveDir(), { recursive: true });
   assertNotSymlink(flagPath);
   writeFileSync(flagPath, EMPTY_CONTENT);
 };
 
 const runOff = (sessionId: string): void => {
-  const activeDir = buildActiveDir();
-  const flagPath = join(activeDir, sessionId);
-  assertNotSymlink(buildRikaiDir());
-  assertNotSymlink(activeDir);
+  const flagPath = resolveFlagPath(sessionId);
   assertNotSymlink(flagPath);
   rmSync(flagPath, { force: true });
 };
 
 const buildSnippet = (copyPath: string): string => {
   const settings = {
-    statusLine: { type: "command", command: `node ${copyPath}` },
+    [STATUSLINE_KEY]: {
+      [STATUSLINE_TYPE_KEY]: STATUSLINE_TYPE_COMMAND,
+      [STATUSLINE_COMMAND_KEY]: `${NODE_COMMAND} "${copyPath}"`,
+    },
   };
   return [
     "次の内容を settings.json に追記してください。",

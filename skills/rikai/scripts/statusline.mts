@@ -1,6 +1,6 @@
 import { lstatSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 const INDICATOR = "[理解]";
 const STDIN_FD = 0;
@@ -12,7 +12,7 @@ const SESSION_ID_PATTERN = /^[A-Za-z0-9_-]+$/;
 
 const resolveConfigDir = (): string => {
   const fromEnv = process.env[CONFIG_DIR_ENV];
-  return fromEnv ? fromEnv : join(homedir(), DEFAULT_CONFIG_DIR_NAME);
+  return resolve(fromEnv ? fromEnv : join(homedir(), DEFAULT_CONFIG_DIR_NAME));
 };
 
 const readSessionId = (raw: string): string | undefined => {
