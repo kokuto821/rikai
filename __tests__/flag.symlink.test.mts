@@ -6,7 +6,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import {
   ACTIVE_DIR_NAME,
   buildActiveDir,
@@ -14,6 +14,7 @@ import {
   buildFlagPath,
   buildRejectedResult,
   buildRikaiDir,
+  cleanupTempDirs,
   createFlagResult,
   createSnapshot,
   createTempDir,
@@ -21,6 +22,8 @@ import {
   SUCCESS_RESULT,
   SYMLINK_REASON,
 } from "./helpers/scriptTestHelpers.mts";
+
+afterEach(cleanupTempDirs);
 
 const TARGET_CONTENT = "link-target-content";
 const FLAG_TARGET_NAME = "flag-target";
@@ -123,79 +126,83 @@ const SYMLINK_LAYOUTS: { kind: string; buildLayout: LayoutBuilder }[] = [
 const COMMANDS = ["on", "off"];
 
 describe("flag symlink", () => {
-  test.each(
-    COMMANDS.flatMap((command) =>
-      SYMLINK_LAYOUTS.map((layout) => ({
-        command,
-        shouldExist: command === "on",
-        ...layout,
-      })),
-    ),
-  )(
-    "対照: $command は $kind が symlink でなければ成功する",
-    ({ command, shouldExist, buildLayout }) => {
-      // Arrange
-      const configDir = createTempDir();
-      buildLayout(configDir, false);
+  describe("正常系", () => {
+    test.each(
+      COMMANDS.flatMap((command) =>
+        SYMLINK_LAYOUTS.map((layout) => ({
+          command,
+          shouldExist: command === "on",
+          ...layout,
+        })),
+      ),
+    )(
+      "対照: $command は $kind が symlink でなければ成功する",
+      ({ command, shouldExist, buildLayout }) => {
+        // Arrange
+        const configDir = createTempDir();
+        buildLayout(configDir, false);
 
-      // Act
-      const result = createFlagResult([command, SESSION_ID], { configDir });
+        // Act
+        const result = createFlagResult([command, SESSION_ID], { configDir });
 
-      // Assert
-      expect(result).toStrictEqual(SUCCESS_RESULT);
-      expect(existsSync(buildFlagPath(configDir, SESSION_ID))).toBe(
-        shouldExist,
-      );
-    },
-  );
+        // Assert
+        expect(result).toStrictEqual(SUCCESS_RESULT);
+        expect(existsSync(buildFlagPath(configDir, SESSION_ID))).toBe(
+          shouldExist,
+        );
+      },
+    );
+  });
 
-  test.each(
-    COMMANDS.flatMap((command) =>
-      [
-        ...SYMLINK_LAYOUTS,
-        { kind: "リンク先が無い flag", buildLayout: buildDanglingFlagLayout },
-      ].map((layout) => ({ command, ...layout })),
-    ),
-  )(
-    "$command は $kind が symlink なら拒否し、リンク先を変えない",
-    ({ command, buildLayout }) => {
-      // Arrange
-      const configDir = createTempDir();
-      const { linkPath, targetPath } = buildLayout(configDir, true);
-      const before = createSnapshot(targetPath);
+  describe("異常系", () => {
+    test.each(
+      COMMANDS.flatMap((command) =>
+        [
+          ...SYMLINK_LAYOUTS,
+          { kind: "リンク先が無い flag", buildLayout: buildDanglingFlagLayout },
+        ].map((layout) => ({ command, ...layout })),
+      ),
+    )(
+      "$command は $kind が symlink なら拒否し、リンク先を変えない",
+      ({ command, buildLayout }) => {
+        // Arrange
+        const configDir = createTempDir();
+        const { linkPath, targetPath } = buildLayout(configDir, true);
+        const before = createSnapshot(targetPath);
 
-      // Act
-      const result = createFlagResult([command, SESSION_ID], { configDir });
+        // Act
+        const result = createFlagResult([command, SESSION_ID], { configDir });
 
-      // Assert
-      expect(result).toStrictEqual(buildRejectedResult(SYMLINK_REASON));
-      expect(createSnapshot(targetPath)).toStrictEqual(before);
-      expect(lstatSync(linkPath).isSymbolicLink()).toBe(true);
-    },
-  );
+        // Assert
+        expect(result).toStrictEqual(buildRejectedResult(SYMLINK_REASON));
+        expect(createSnapshot(targetPath)).toStrictEqual(before);
+        expect(lstatSync(linkPath).isSymbolicLink()).toBe(true);
+      },
+    );
 
-  test.each([
-    { kind: "rikai/", buildLayout: buildRikaiDirInstallLayout },
-    { kind: "コピー先", buildLayout: buildCopyPathInstallLayout },
-    {
-      kind: "リンク先が無いコピー先",
-      buildLayout: buildDanglingCopyPathInstallLayout,
-    },
-  ])(
-    "install は $kind が symlink なら拒否し、リンク先を変えない",
-    ({ buildLayout }) => {
-      // Arrange
-      const configDir = createTempDir();
-      const { linkPath, targetPath } = buildLayout(configDir);
-      const before = createSnapshot(targetPath);
+    test.each([
+      { kind: "rikai/", buildLayout: buildRikaiDirInstallLayout },
+      { kind: "コピー先", buildLayout: buildCopyPathInstallLayout },
+      {
+        kind: "リンク先が無いコピー先",
+        buildLayout: buildDanglingCopyPathInstallLayout,
+      },
+    ])(
+      "install は $kind が symlink なら拒否し、リンク先を変えない",
+      ({ buildLayout }) => {
+        // Arrange
+        const configDir = createTempDir();
+        const { linkPath, targetPath } = buildLayout(configDir);
+        const before = createSnapshot(targetPath);
 
-      // Act
-      const result = createFlagResult(["install"], { configDir });
+        // Act
+        const result = createFlagResult(["install"], { configDir });
 
-      // Assert
-      expect(result).toStrictEqual(buildRejectedResult(SYMLINK_REASON));
-      expect(createSnapshot(targetPath)).toStrictEqual(before);
-      expect(lstatSync(linkPath).isSymbolicLink()).toBe(true);
-    },
-  );
+        // Assert
+        expect(result).toStrictEqual(buildRejectedResult(SYMLINK_REASON));
+        expect(createSnapshot(targetPath)).toStrictEqual(before);
+        expect(lstatSync(linkPath).isSymbolicLink()).toBe(true);
+      },
+    );
+  });
 });

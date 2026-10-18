@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { afterEach, expect } from "vitest";
+import { expect } from "vitest";
 
 export const SCRIPTS_DIR = resolve(
   import.meta.dirname,
@@ -70,16 +70,17 @@ export type ScriptOptions = {
 
 const tempDirs: string[] = [];
 
-afterEach(() => {
-  for (const dir of tempDirs.splice(0)) {
-    rmSync(dir, { recursive: true, force: true });
-  }
-});
-
 export const createTempDir = (): string => {
   const dir = mkdtempSync(join(tmpdir(), TEMP_DIR_PREFIX));
   tempDirs.push(dir);
   return dir;
+};
+
+// 各テストファイル側で `afterEach(cleanupTempDirs)` を明示的に呼び出す。
+export const cleanupTempDirs = (): void => {
+  for (const dir of tempDirs.splice(0)) {
+    rmSync(dir, { recursive: true, force: true });
+  }
 };
 
 // 実際の ~/.claude に触れないよう、設定ディレクトリとホームを一時ディレクトリにする。
