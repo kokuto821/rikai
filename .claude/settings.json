@@ -6,6 +6,12 @@
         "repo": "kokuto821/matagi"
       }
     },
+    "rikai": {
+      "source": {
+        "source": "github",
+        "repo": "kokuto821/rikai"
+      }
+    },
     "yomiyasu": {
       "source": {
         "source": "github",
@@ -20,6 +26,7 @@
     }
   },
   "enabledPlugins": {
+    "rikai@rikai": true,
     "matagi@matagi": true,
     "matagi-kaji@matagi": true,
     "yomiyasu@yomiyasu": true,

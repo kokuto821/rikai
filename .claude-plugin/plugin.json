@@ -1,0 +1,8 @@
+{
+  "name": "rikai",
+  "description": "AIの回答ごとに質問提案かクイズを出し、ユーザーの理解度を確かめて理解を促進するスキル",
+  "author": {
+    "name": "kokuto821"
+  },
+  "repository": "https://github.com/kokuto821/rikai"
+}
