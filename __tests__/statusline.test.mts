@@ -38,7 +38,7 @@ const buildInput = (sessionId: unknown): string =>
 
 describe("statusline", () => {
   describe("正常系", () => {
-    test("フラグがあるセッションでは [理解] だけを改行なしで出力する", () => {
+    test("フラグがあるセッションでは [rikai] だけを改行なしで出力する", () => {
       // Arrange
       const configDir = createTempDir();
       createFlag(configDir, SESSION_ID);
@@ -52,7 +52,7 @@ describe("statusline", () => {
       expect(result).toStrictEqual(SHOWN_RESULT);
     });
 
-    test("英数字・ハイフン・アンダースコアの session_id でも [理解] を出力する", () => {
+    test("英数字・ハイフン・アンダースコアの session_id でも [rikai] を出力する", () => {
       // Arrange
       const configDir = createTempDir();
       createFlag(configDir, ALLOWED_CHARS_SESSION_ID);
@@ -67,7 +67,7 @@ describe("statusline", () => {
       expect(result).toStrictEqual(SHOWN_RESULT);
     });
 
-    test("session_id 以外のフィールドを含む JSON でも [理解] を出力する", () => {
+    test("session_id 以外のフィールドを含む JSON でも [rikai] を出力する", () => {
       // Arrange
       const configDir = createTempDir();
       createFlag(configDir, SESSION_ID);

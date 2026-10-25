@@ -217,4 +217,4 @@ flowchart TD
 - 終了より後の回答には、判定結果もレポートも問いも付けない。
 
 **バッジ**
-- バッジ（`[理解]`）を出したいと頼まれたときだけ、確認を取って `node ${CLAUDE_SKILL_DIR}/scripts/flag.mts install` を実行し、出力されたスニペットと「すでに statusLine があれば連結する」旨をそのまま伝える。`install` は `allowed-tools` に載せていないので、都度の確認になる（意図した設計）。確認で拒否されたら、実行せず終える。起動時に自動で案内しない。
+- バッジ（`[rikai]`）を出したいと頼まれたときだけ、確認を取って `node ${CLAUDE_SKILL_DIR}/scripts/flag.mts install` を実行し、出力されたスニペットと「すでに statusLine があれば連結する」旨をそのまま伝える。`install` は `allowed-tools` に載せていないので、都度の確認になる（意図した設計）。確認で拒否されたら、実行せず終える。起動時に自動で案内しない。
