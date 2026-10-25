@@ -14,10 +14,11 @@ rikaiの開発ルール。概要は [README.md](README.md)、仕様は [openspec
 
 Trunk Based Developmentを採用する。短命の作業ブランチを切り、PRでmainに取り込む。
 保護ブランチの扱いは、下のIssue Managementに従う。`matagi` のhookはClaude Codeセッション内の制約で、GitHub側のブランチ保護の代わりではない。
+リリースは、専用の作業ブランチ `chore/#N_release-vX.Y.Z` で `version` を上げ、PRでmainに取り込む（`.claude/rules/release.md`）。
 
 ## Version Management
 
-SemVerを採用する。運用（バージョンの所在など）は未決。`rikai-skill-spec` の `design.md` の Open Questions「リポジトリ」を参照する。
+SemVerを採用する。バージョンの所在、リリース手順、リリースノート、rulesetとCIの方針、ライセンスは [.claude/rules/release.md](.claude/rules/release.md) に従う。
 
 ## Spec Management
 
