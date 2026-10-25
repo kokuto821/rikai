@@ -37,26 +37,29 @@ AIの回答ごとにユーザーの理解を確かめ、理解を促進するモ
 
 ```mermaid
 flowchart TD
-    Start(["ユーザーの発言"]) --> HasAnswer{"前回の問いへの返答<br/>（クイズの回答、提案した質問をそのまま尋ねる、言い換え）が<br/>含まれるか"}
+    Start(["ユーザーの発言"]) --> HasAnswer{"ユーザーの発言に、AIの前回の問いへの返答が含まれるか"}
     HasAnswer -- "含まれる" --> JudgeAnswer["判定し、問いの出題元の話題の<br/>レポートに記録する"]
-    HasAnswer -- "含まれない" --> Pending{"前回の問いが残っていたか"}
+    HasAnswer -- "含まれない" --> Pending{"AIの前回の問いが残っていたか"}
     Pending -- "残っていた" --> NoReply["出題元の話題のレポートに<br/>「返答なし」として記録する<br/>話題が同じでも別でも同じ。通知せずに記録し、<br/>レポートの変化で気づかせる"]
-    Pending -- "なし" --> HasFree
-    JudgeAnswer --> HasFree
-    NoReply --> HasFree
-    HasFree{"問いとは無関係な仮説、または<br/>詳細を詰める型の質問が含まれるか<br/>（上で扱ったものを除く）"}
-    HasFree -- "含まれる" --> JudgeFree["判定し、対象の話題のレポートに記録する<br/>新しい話題なら、次で作るレポートに記録する"]
-    HasFree -- "含まれない" --> Count
-    JudgeFree --> Count
-    Count{"返答・仮説・詳細を詰める型の質問の<br/>いずれかが含まれたか<br/>（起動と同じ発言への回答は含まれなくても数える）"}
+    Pending -- "なし" --> Topic
+    JudgeAnswer --> Topic
+    NoReply --> Topic
+    Topic{"ユーザーの発言で、前回の回答<br/>（回答本文、問い、最後に記録したレポート）から<br/>話題が変わったか"}
+    Topic -- "変わった" --> Split["話題ごとに「新レポート: 話題名」と通知し（1行ずつ。位置は第1節の0）、<br/>レポートを分ける<br/>発言に話題が複数あれば、それぞれ分ける<br/>戻ってきた話題は既存レポートを再開する"]
+    Topic -- "同じ" --> HasFree
+    Split --> HasFree
+    HasFree{"ユーザーの発言に、AIの前回の問いとは無関係な仮説、<br/>または詳細を詰める型の質問が含まれるか<br/>（上で扱ったものを除く）"}
+    HasFree -- "含まれる" --> JudgeFree["判定し、その仮説・質問が扱う話題のレポートに記録する"]
+    HasFree -- "含まれない" --> Launch
+    JudgeFree --> Launch
+    Launch{"ユーザーが新しく起動した発言に、依頼が含まれるか"}
+    Launch -- "はい（返答・仮説・質問が含まれなくても数える）" --> Inc
+    Launch -- "いいえ" --> Count
+    Count{"ユーザーの発言に、返答・仮説・<br/>詳細を詰める型の質問の<br/>いずれかが含まれたか"}
     Count -- "数える" --> Inc["回答番号を1進める"]
     Count -- "数えない" --> Keep["回答番号は進めない"]
-    Inc --> Topic
-    Keep --> Topic
-    Topic{"話題が変わったか"}
-    Topic -- "変わった" --> Split["「新レポート: 話題名」と通知し（1行。位置は第1節の0）、<br/>レポートを分ける<br/>戻ってきた話題は既存レポートを再開する"]
-    Topic -- "同じ" --> Body
-    Split --> Body
+    Inc --> Body
+    Keep --> Body
     Body["回答本文を作る"] --> Report["前回のレポートを前提に、第5節の規則で更新する"]
     Report --> Pick["問いを1問選ぶ（第4節）"]
     Pick --> Out(["第1節の順に出力する"])
