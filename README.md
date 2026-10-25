@@ -4,7 +4,7 @@ AIの回答をユーザーが理解できているかを確かめ、理解を促
 
 ## 状態
 
-実装済み。`skills/rikai/SKILL.md`、スクリプト、plugin の manifest がある。バージョンの運用（SemVer）と `LICENSE` は未決。
+実装済み。`skills/rikai/SKILL.md`、スクリプト、plugin の manifest がある。バージョンはSemVerで管理し、[Releases](https://github.com/kokuto821/rikai/releases) で公開する。
 
 ## 概要
 
@@ -70,3 +70,8 @@ Claude Code は、入力欄に次の発言の予測を薄い文字で出すこ�
 - [仕様](openspec/specs/)（rikai の振る舞い。確定・既定・未決・要確認を区別して記載）
 - [設計と未決事項](openspec/changes/archive/)（`archive/*-rikai-skill-spec/design.md`。実装方針と未決事項を記載）
 - [開発ルール](AGENTS.md)
+- [リリースとバージョニング](.claude/rules/release.md)
+
+## ライセンス
+
+[MIT License](LICENSE)
