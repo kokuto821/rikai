@@ -10,7 +10,7 @@ AIの回答をユーザーが理解できているかを確かめ、理解を促
 
 - 回答ごとに問いを1問出す（質問提案またはクイズ）
 - ユーザーの返答から理解度を判定し、理解度レポートを更新する
-- 通常のチャットでも使える。スクリプト・`[理解]` バッジ・レポートのファイル保存は Claude Code 向けの任意機能
+- 通常のチャットでも使える。スクリプト・`[rikai]` バッジ・レポートのファイル保存は Claude Code 向けの任意機能
 
 ## 導入
 
@@ -31,7 +31,7 @@ claude plugin install rikai@rikai
 
 起動中は、全ての回答に、判定結果、理解度レポート、問い1問が付く。会話圧縮や `/clear` でモードが失われたときは、再度 `/rikai` で起動する。
 
-## `[理解]` バッジ（任意）
+## `[rikai]` バッジ（任意）
 
 バッジは表示専用で、出なくてもモードの動作は変わらない。Claude Code の statusline に出す。
 
@@ -51,7 +51,7 @@ claude plugin install rikai@rikai
 }
 ```
 
-`/path/to/other-statusline.sh` は、すでに使っている statusline のコマンドに置き換える。`CLAUDE_CONFIG_DIR` を設定している場合は、`$HOME/.claude` をその値に置き換える。genshijin のバッジとの連結で、`[原始人] [理解]` と並んで表示されることを確認している。
+`/path/to/other-statusline.sh` は、すでに使っている statusline のコマンドに置き換える。`CLAUDE_CONFIG_DIR` を設定している場合は、`$HOME/.claude` をその値に置き換える。genshijin のバッジとの連結で、`[原始人] [rikai]` と並んで表示されることを確認している。
 
 ## 他のスキルとの併用
 
