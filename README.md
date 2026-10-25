@@ -59,11 +59,11 @@ claude plugin install rikai@rikai
 
 ## 入力欄のサジェスト
 
-Claude Code は、入力欄に、次の発言の予測を薄い文字で出すことがある（プロンプトサジェスト）。クイズの直後に、その答えが出てしまうことがある。サジェストは Claude Code 本体の機能で、スキルからは抑えられない。答えが見えて困るときは、利用者の設定で無効にする。
+Claude Code は、入力欄に次の発言の予測を薄い文字で出すことがある（プロンプトサジェスト）。クイズの直後にその答えが出てしまうことがある。サジェストは Claude Code 本体の機能で、スキルからは抑えられない。答えが見えて困るときは、利用者の設定で無効にする。
 
 - `/config` の Prompt suggestions をオフにする
 - または `settings.json` に `"promptSuggestionEnabled": false` を書く
-- または環境変数 `CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false` を設定する（設定より優先される）
+- または環境変数 `CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false` を設定する（`/config` と `settings.json` のどちらよりも優先される）
 
 ## ドキュメント
 
