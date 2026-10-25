@@ -48,7 +48,7 @@ flowchart TD
     HasFree -- "含まれる" --> JudgeFree["判定し、対象の話題のレポートに記録する<br/>新しい話題なら、次で作るレポートに記録する"]
     HasFree -- "含まれない" --> Count
     JudgeFree --> Count
-    Count{"第4節の条件で数えるターンか"}
+    Count{"返答・仮説・詳細を詰める型の質問の<br/>いずれかが含まれたか<br/>（起動と同じ発言への回答は含まれなくても数える）"}
     Count -- "数える" --> Inc["回答番号を1進める"]
     Count -- "数えない" --> Keep["回答番号は進めない"]
     Inc --> Topic
