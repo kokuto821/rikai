@@ -2,7 +2,7 @@ import { lstatSync, readFileSync, type Stats } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 
-const INDICATOR = "[理解]";
+const INDICATOR = "[rikai]";
 const STDIN_FD = 0;
 const CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR";
 const DEFAULT_CONFIG_DIR_NAME = ".claude";
@@ -96,10 +96,10 @@ const isRealFile = (path: string): boolean => {
 };
 
 /**
- * statusline に出す `[理解]` バッジを標準出力に書く。
+ * statusline に出す `[rikai]` バッジを標準出力に書く。
  *
  * 標準入力の JSON の `session_id` に対応するフラグファイルが実体として
- * あるときだけ、改行なしで `[理解]` を出す。他の statusline と連結できるよう、
+ * あるときだけ、改行なしで `[rikai]` を出す。他の statusline と連結できるよう、
  * それ以外は何も出さない。どんな失敗でも例外を外に出さず、終了コードは 0 になる。
  */
 try {
