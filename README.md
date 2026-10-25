@@ -21,7 +21,7 @@ claude plugin marketplace add kokuto821/rikai
 claude plugin install rikai@rikai
 ```
 
-通常のチャットでは、`skills/rikai/SKILL.md` の内容を指示として貼る。スクリプトは使えないので、質問提案とクイズの別は、回答番号の偶奇（奇数は質問提案、偶数はクイズ）で決まる。
+通常のチャットでは、`skills/rikai/SKILL.md` の内容を指示として貼る。スクリプトは使えないので、質問提案とクイズの別は、直前に出した問いと逆の種別（最初は質問提案）で決まる。
 
 ## 使い方
 
@@ -56,6 +56,14 @@ claude plugin install rikai@rikai
 ## 他のスキルとの併用
 
 類似のスキル（文体を変えるスキルなど）と併用すると、指示が食い違う場合がある。たとえば、判定結果・理解度レポート・問いが、併用するスキルの文体で圧縮されることがある。出力が乱れる場合は、併用するスキルを無効にして使う。
+
+## 入力欄のサジェスト
+
+Claude Code は、入力欄に次の発言の予測を薄い文字で出すことがある（プロンプトサジェスト）。クイズの直後にその答えが出てしまうことがある。サジェストは Claude Code 本体の機能で、スキルからは抑えられない。答えが見えて困るときは、利用者の設定で無効にする。
+
+- `/config` の Prompt suggestions をオフにする
+- または `settings.json` に `"promptSuggestionEnabled": false` を書く
+- または環境変数 `CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false` を設定する（`/config` と `settings.json` のどちらよりも優先される）
 
 ## ドキュメント
 
