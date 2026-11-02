@@ -6,7 +6,12 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["skills/rikai/scripts/**", "__tests__/**", "*.json"]
+    "includes": [
+      "skills/rikai/scripts/**",
+      "scripts/**",
+      "__tests__/**",
+      "*.json"
+    ]
   },
   "formatter": {
     "enabled": true,
