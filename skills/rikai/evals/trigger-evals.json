@@ -1,0 +1,62 @@
+[
+  {
+    "query": "rikaiを始めて。これからKubernetesのPodとDeploymentの違いを勉強したい",
+    "should_trigger": true
+  },
+  {
+    "query": "今日は新しい論文を読むんだけど、AIの説明を鵜呑みにしちゃうのが怖い。クイズで確かめてくれるモードにして",
+    "should_trigger": true
+  },
+  {
+    "query": "理解度チェックしながら説明してほしい。",
+    "should_trigger": true
+  },
+  {
+    "query": "回答のたびに理解度を確認するモードで、Rustの所有権を教えて",
+    "should_trigger": true
+  },
+  {
+    "query": "あなたの説明を鵜呑みにしないように、毎回クイズを出してほしい",
+    "should_trigger": true
+  },
+  {
+    "query": "rikai終了。",
+    "should_trigger": true
+  },
+  {
+    "query": "rikaiスキルのSKILL.mdの第4節に、クイズの選択肢を5個にする例外を足したい。openspecのspecも直してPRまで出して",
+    "should_trigger": false
+  },
+  {
+    "query": "rikaiの終了条件って、どこに書いてあるっけ？ README.mdを見て教えて",
+    "should_trigger": false
+  },
+  {
+    "query": "Pythonのasyncioについてクイズを10問作って。解答と解説は最後にまとめて付けてほしい",
+    "should_trigger": false
+  },
+  {
+    "query": "来週の面接の練習がしたい。バックエンドエンジニア向けの質問を1問ずつ出して、私の答えにフィードバックして",
+    "should_trigger": false
+  },
+  {
+    "query": "このコードの意味が分からない。1行ずつ解説してくれる？ for (const [k, v] of Object.entries(obj)) { ... }",
+    "should_trigger": false
+  },
+  {
+    "query": "学習ノートのテンプレートを作って。今日学んだこと、理解できてない点、次にやることの3見出しがあるもの",
+    "should_trigger": false
+  },
+  {
+    "query": "claude codeで、スキルのtrigger評価データを作りたい。should_triggerのtrue/falseを両方入れたJSONで、8件ずつ",
+    "should_trigger": false
+  },
+  {
+    "query": "私がReduxを理解できているか、短いテストで一度だけ診断してほしい。モードとかは要らなくて、一回きりでいい",
+    "should_trigger": false
+  },
+  {
+    "query": "genshijinモードで答えて。あと、説明が分かりにくかったら遠慮なく言うから、いつも通りに回答だけ頂戴",
+    "should_trigger": false
+  }
+]
