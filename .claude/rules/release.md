@@ -3,6 +3,7 @@ paths:
   - ".claude-plugin/**"
   - ".github/**"
   - "LICENSE"
+  - "scripts/build-zip.mts"
 ---
 
 # リリースとバージョニング
@@ -32,8 +33,13 @@ rikaiのバージョニング、リリース手順、リリースノート、ブ
 
 1. リリース専用の作業ブランチ `chore/#N_release-vX.Y.Z` を切り、`plugin.json` の `version` を上げる。
 2. PRで `main` にマージする。
-3. マージ後のコミットにタグ `vX.Y.Z` を打ち、GitHub Releaseを作る。
+3. `main` を最新にし、マージ後のコミットにタグ `vX.Y.Z` を打ってpushする。
+4. `git switch --detach vX.Y.Z` でタグのコミットに移り、`git status --porcelain` が空であることを確かめる。
+5. `npm ci` を実行し、既存の `rikai.zip` を消してから `npm run build:zip` を実行する。
+6. 生成に成功した場合だけ、`gh release create vX.Y.Z rikai.zip --verify-tag` でGitHub Releaseを作る。リリースノートは `--notes-file` で渡す。
+7. `git switch main` で戻る。
 
+- `rikai.zip` は作業ツリーの `SKILL.md` をそのまま固める。タグと異なる内容を配布しないよう、手順4の確認と手順5の削除を省かない。
 - 長命のリリースブランチ（`release/*` など）は作らない。
 - 通常の機能PRでは `version` を触らない。
 

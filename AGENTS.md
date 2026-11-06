@@ -14,7 +14,7 @@ rikaiの開発ルール。概要は [README.md](README.md)、仕様は [openspec
 
 Trunk Based Developmentを採用する。短命の作業ブランチを切り、PRでmainに取り込む。
 保護ブランチの扱いは、下のIssue Managementに従う。`matagi` のhookはClaude Codeセッション内の制約で、GitHub側のブランチ保護の代わりではない。
-リリースは、専用の作業ブランチ `chore/#N_release-vX.Y.Z` で `version` を上げ、PRでmainに取り込む（`.claude/rules/release.md`）。
+リリースは、専用の作業ブランチ `chore/#N_release-vX.Y.Z` で `version` を上げ、PRでmainに取り込み、タグとGitHub Release（`rikai.zip` を添付）を作るまでを行う（`.claude/rules/release.md`）。
 
 ## Version Management
 

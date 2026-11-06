@@ -8,6 +8,9 @@ node_modules/
 # rikai のレポート出力先（会話内容を含みうる）
 .rikai/
 
+# 配布用 ZIP（npm run build:zip の生成物）
+rikai.zip
+
 # openspec init / openspec update が再生成する成果物
 .claude/skills/openspec-*/
 .claude/commands/opsx/

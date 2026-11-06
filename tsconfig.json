@@ -11,5 +11,9 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
-  "include": ["skills/rikai/scripts/**/*.mts", "__tests__/**/*.mts"]
+  "include": [
+    "skills/rikai/scripts/**/*.mts",
+    "scripts/**/*.mts",
+    "__tests__/**/*.mts"
+  ]
 }

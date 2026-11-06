@@ -20,6 +20,10 @@ export const SCRIPTS_DIR = resolve(
 export const PICK_SCRIPT_PATH = join(SCRIPTS_DIR, "pick.mts");
 export const FLAG_SCRIPT_PATH = join(SCRIPTS_DIR, "flag.mts");
 export const STATUSLINE_SCRIPT_PATH = join(SCRIPTS_DIR, "statusline.mts");
+export const BUILD_ZIP_SCRIPT_PATH = resolve(
+  import.meta.dirname,
+  "../../scripts/build-zip.mts",
+);
 
 export const SUCCESS_EXIT_CODE = 0;
 export const FAILURE_EXIT_CODE = 1;
@@ -183,6 +187,18 @@ export const createStatuslineResult = (
   options: ScriptOptions = {},
 ): ScriptResult =>
   createScriptResult(STATUSLINE_SCRIPT_PATH, [], { ...options, input });
+
+/**
+ * `build-zip.mts` を実行し、結果を返す。
+ *
+ * @param args - `build-zip.mts` に渡す引数（outPath と skillPath）
+ * @param options - 環境変数・標準入力・cwd などの指定
+ * @returns 終了コード・標準出力・標準エラー
+ */
+export const createBuildZipResult = (
+  args: string[],
+  options: ScriptOptions = {},
+): ScriptResult => createScriptResult(BUILD_ZIP_SCRIPT_PATH, args, options);
 
 /**
  * 正規表現の特殊文字をエスケープする。

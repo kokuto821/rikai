@@ -8,11 +8,13 @@
   "scripts": {
     "test": "vitest run",
     "lint": "biome check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:zip": "node scripts/build-zip.mts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "@types/node": "22.20.5",
+    "fflate": "0.8.3",
     "typescript": "7.0.2",
     "vitest": "5.0.5"
   }
