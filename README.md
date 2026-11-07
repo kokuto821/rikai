@@ -10,7 +10,7 @@ AIの回答をユーザーが理解できているかを確かめ、理解を促
 
 - 回答ごとに問いを1問出す（質問提案またはクイズ）
 - ユーザーの返答から理解度を判定し、理解度レポートを更新する
-- 通常のチャットでも使える。スクリプト・`[rikai]` バッジ・レポートのファイル保存は Claude Code 向けの任意機能
+- 通常のチャットでも使える。スクリプトと、レポートのファイル保存は Claude Code 向けの任意機能
 
 ## 導入
 
@@ -31,27 +31,12 @@ claude plugin install rikai@rikai
 
 起動中は、全ての回答に、判定結果、理解度レポート、問い1問が付く。会話圧縮や `/clear` でモードが失われたときは、再度 `/rikai` で起動する。
 
-## `[rikai]` バッジ（任意）
+## `[rikai]` バッジの廃止
 
-バッジは表示専用で、出なくてもモードの動作は変わらない。Claude Code の statusline に出す。
+statusline の `[rikai]` バッジは廃止した（#27）。バッジを導入していた場合は、次の順に手で消す。消さなくても、モードの動作には影響しない。
 
-1. Claude Code で、「rikaiのバッジを導入して」と頼む。確認を求められるので、承認する。`flag.mts install` が `statusline.mts` を `${CLAUDE_CONFIG_DIR:-~/.claude}/rikai/` にコピーし、`settings.json` に追記するスニペットを表示する。`settings.json` は自動では編集されない。
-2. 表示されたスニペットを、`settings.json` の `statusLine` に追記する。
-
-### 他の statusline と連結する
-
-`statusLine` に指定できるコマンドは1つだけなので、すでに他の statusline を使っているときは、1つのコマンドにまとめる。statusline は標準入力の JSON を1回しか読めないので、変数に受けて、各コマンドに渡す。rikai の出力はバッジ文字列だけなので、並べて連結できる。
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "bash -c 'in=$(cat); printf \"%s\" \"$in\" | bash /path/to/other-statusline.sh; printf \" \"; printf \"%s\" \"$in\" | node \"$HOME/.claude/rikai/statusline.mts\"'"
-  }
-}
-```
-
-`/path/to/other-statusline.sh` は、すでに使っている statusline のコマンドに置き換える。`CLAUDE_CONFIG_DIR` を設定している場合は、`$HOME/.claude` をその値に置き換える。genshijin のバッジとの連結で、`[原始人] [rikai]` と並んで表示されることを確認している。
+1. `${CLAUDE_CONFIG_DIR:-~/.claude}/settings.json` の `statusLine` から、rikai の部分を除く。rikai だけを指定していた場合は、`statusLine` ごと消す。他の statusline と連結していた場合は、`rikai/statusline.mts` を呼ぶ部分と、区切りの `printf " "` を除く。連結していた相手が1つだけなら、そのコマンドだけを指定する元の形に戻してよい。
+2. `${CLAUDE_CONFIG_DIR:-~/.claude}/rikai/` を削除する。
 
 ## 他のスキルとの併用
 
