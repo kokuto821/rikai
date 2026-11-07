@@ -162,7 +162,7 @@ flowchart TD
     Inc --> Body
     Keep --> Body
     Body["回答本文を作る"] --> Report["前回のレポートを前提に更新する"]
-    Report --> Pick{"問いの種別を機械的に選ぶ<br/>Claude Code: 乱数<br/>通常チャット: 直前の問いと逆"}
+    Report --> Pick{"問いの種別を機械的に選ぶ<br/>Claude Code: 乱数<br/>Claude Code 以外: 直前の問いと逆"}
     Pick -- "質問提案" --> Ask["詳細を詰める（何？/どこ？/仕組み？/なぜ？/具体的には？）<br/>またはオウム返しから1件を選ぶ"]
     Pick -- "クイズ" --> Quiz["用語・事実 → 選択式（理由も答える）<br/>仕組み・理由 → 記述式"]
     Ask --> Out
