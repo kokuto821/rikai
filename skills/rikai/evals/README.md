@@ -2,7 +2,7 @@
 
 別エージェントが起草し、別のエージェントが仕様の本文と照らして見直した。SKILL.md の実装ではなく、README.md と `openspec/specs/` から期待挙動を導いた。
 
-- `evals.json`: 起動後の振る舞いを1ターンで測るケース5件（起動と依頼、クイズへの返答、詳細を詰める質問、話題の切り替え、終了）。skill-creator の schemas.md の形式（`skill_name` / `evals[].id, prompt, expected_output, files, expectations`）。セッション途中の状態は、prompt 内に会話の要約として埋め込む。
+- `evals.json`: 起動後の振る舞いを1ターンで測るケース6件（起動と依頼、クイズへの返答、詳細を詰める質問、話題の切り替え、終了、英語での起動と依頼）。6件目は #30 で、`rikai-session-mode` の「出力の言語をユーザーの発言の言語に合わせる」から導いて足した。skill-creator の schemas.md の形式（`skill_name` / `evals[].id, prompt, expected_output, files, expectations`）。セッション途中の状態は、prompt 内に会話の要約として埋め込む。
 - `trigger-evals.json`: description 最適化用。`{query, should_trigger}` の配列で、true 6件・false 9件。false には、近接ケース（rikai自体の開発、一回きりのクイズ作成、面接練習、eval作成の依頼）を含める。
 
 ## 1ターンで測れない性質（evals.json では未検証）
