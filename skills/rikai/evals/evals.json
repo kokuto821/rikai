@@ -78,6 +78,151 @@
         "前回のクイズの論点が、「返答がない箇所」に残っている",
         "問いが付いていない"
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "/rikai What is the difference between a Docker multi-stage build and a normal Dockerfile? My Node API server image is 1.2GB right now.",
+      "expected_output": "環境: Claude Code。英語での新規起動と同じ発言の依頼。起動の通知、回答本文、理解度レポート、問い1問が、すべて英語で出る。レポートの構成と順序は日本語の雛形と同じ。",
+      "files": [],
+      "expectations": [
+        "冒頭の、rikaiを有効にした旨の1行が英語で書かれている",
+        "依頼（マルチステージビルドの違い）に対する回答本文が英語で書かれている",
+        "理解度レポートのMarkdownコードブロックがあり、タイトル、回答番号と概要のラベル、4つの項目の見出しが英語で書かれている（日本語の見出しが残っていない）",
+        "レポートの項目の構成と順序が、日本語の雛形（タイトル、回答番号、概要、理解した・一部理解した・理解できてない・返答がない箇所）と同じで、回答番号が1である",
+        "レポートの項目の中身（あれば）が英語で書かれている",
+        "応答の最後尾に問いがちょうど1問あり、英語で書かれている",
+        "コマンドやファイル名などのコード片は、訳されずにそのまま書かれている"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "rikai有効中の会話。これまでのユーザーの発言とrikaiの出力は、すべて日本語。gitのrebaseとmergeを説明済み。レポートの見出しは「理解度レポート: gitのrebaseとmerge」で、回答番号1。返答がない欄に「履歴の残り方の違い」「共有済みブランチのrebaseの問題」。前回の問いはクイズ「共有済みブランチをrebaseすると何が問題か。A.衝突が起きなくなる B.他の人の履歴とずれる C.マージコミットが増える D.ブランチが消える（理由も答える）」。ユーザー発言: 「B. Rebasing rewrites the commits with new hashes, so other people's copies of the branch no longer match mine.」次の応答を書いて。",
+      "expected_output": "日本語の会話の途中で、ユーザーが英語で返答したターン。回答本文は作らず、判定結果（理解した）、英語で書き直したレポート（回答番号2）、英語の問い1問の順に出る。",
+      "files": [],
+      "expectations": [
+        "判定結果、レポート、問いの地の文がすべて英語で書かれている（前回の問いを引用した部分を除き、日本語の文が残っていない）",
+        "判定結果が「理解した」に当たる内容である（選択Bも、理由のハッシュの付け替えも一致）",
+        "レポートの見出しが、話題名を含めて英語に書き直されている（「理解度レポート」「gitのrebaseとmerge」のまま残っていない）",
+        "レポートのラベルと4つの項目の見出しが英語で書かれ、構成と順序は日本語の雛形と同じである",
+        "返答がないまま残る「履歴の残り方の違い」の項目も、英語に書き直されている",
+        "レポートの回答番号が2である",
+        "共有済みブランチのrebaseの件が、理解した箇所に当たる項目に入り、返答がない箇所に当たる項目には残っていない",
+        "新しい回答本文は作られていない",
+        "出力順は、判定結果、レポート、問いの順である",
+        "応答の最後尾に、問いがちょうど1問ある"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "/rikai useEffect の cleanup って何？ addEventListener で付けたリスナーを、いつ外せばいいのか知りたい。",
+      "expected_output": "環境: Claude Code。英語の用語を混ぜた日本語の発言での新規起動と依頼。出力はすべて日本語で、起動の1行やレポートの雛形の文言は、日本語の雛形のまま変わらない。",
+      "files": [],
+      "expectations": [
+        "冒頭の、rikaiを有効にした旨の1行が日本語で書かれている。レポート形式の提案が付く場合は、それも日本語で書かれている",
+        "依頼（useEffectのcleanup）に対する回答本文が日本語で書かれている（英語の用語に引きずられて英語になっていない）",
+        "`useEffect`、`addEventListener` などの識別子は、訳されずにそのまま書かれている",
+        "理解度レポートの見出しが「理解度レポート: <話題>」、ラベルが「回答番号」（概要を出す場合は「概要」）で、4つの項目の見出しが日本語の雛形の文言のまま書かれている",
+        "レポートの回答番号が1である",
+        "応答の最後尾に問いがちょうど1問あり、日本語で書かれている"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "/rikai A senior engineer left this review comment on my PR: 「本番イメージに devDependencies を入れないで」. Why does that matter, and how should I change my Dockerfile?",
+      "expected_output": "環境: Claude Code。日本語の文を引用した英語の発言での新規起動と依頼。地の文が英語なので、起動の通知、回答本文、理解度レポート、問い1問が、すべて英語で出る。",
+      "files": [],
+      "expectations": [
+        "冒頭の、rikaiを有効にした旨の1行が英語で書かれている。レポート形式の提案が付く場合は、それも英語で書かれている",
+        "依頼（本番イメージからdevDependenciesを除く理由と方法）に対する回答本文の地の文が英語で書かれている（レビューコメントを引用した部分を除き、日本語になっていない）",
+        "理解度レポートの見出し（話題名を含む）、ラベル、4つの項目の見出しが英語で書かれている",
+        "レポートの回答番号が1である",
+        "応答の最後尾に問いがちょうど1問あり、英語で書かれている",
+        "`devDependencies` やコマンド、Dockerfileの記述などのコード片は、訳されずにそのまま書かれている"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "rikai有効中の会話。これまでのユーザーの発言とrikaiの出力は、すべて英語。gitのrebaseとmergeを説明済み。レポートの見出しは「Understanding report: git rebase vs merge」で、回答番号1。返答がない欄に「How history is kept」「Problems with rebasing a shared branch」。前回の問いはクイズ「What goes wrong if you rebase a branch that others already pulled? A. Conflicts no longer happen B. Your history diverges from others' C. Merge commits increase D. The branch is deleted (explain why)」。ユーザー発言: 「By the way, can you explain Docker multi-stage builds?」次の応答を書いて。",
+      "expected_output": "英語の会話で、問いに答えず別の話題へ移るターン。新しい話題のレポートを作った旨の通知、回答本文、2話題のレポート（回答番号は1のまま）、問い1問が、すべて英語で出る。判定結果は無い。",
+      "files": [],
+      "expectations": [
+        "「新レポート: <topic>」に当たる通知が、英語の1行で、回答本文より前にある",
+        "新しい話題（Dockerのマルチステージビルド）に対する回答本文が英語で書かれている",
+        "判定結果（採点・正解の提示）は出ていない。前回のクイズに返答がないため",
+        "gitの話題のレポートの見出しが、既存の訳の文言「Understanding report」のまま出ている（同じ言語が続く間は、定型文の訳を変えない）",
+        "新しい話題のレポートが、gitの話題とは別のレポートとして英語で出ている。見出しの「Understanding report」の部分の文言は、gitの話題のレポートと同じである",
+        "前回のクイズの論点が、gitの話題のレポートの返答がない箇所に当たる項目に残っている",
+        "レポートの回答番号が1のままである",
+        "応答の最後尾に問いがちょうど1問あり、英語で書かれ、素材は新しい話題である"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "rikai有効中の会話。これまでのユーザーの発言とrikaiの出力は、すべて英語。gitのrebaseとmergeを説明済み。レポートの見出しは「Understanding report: git rebase vs merge」で、回答番号1。返答がない欄に「How history is kept」「Problems with rebasing a shared branch」。前回の問いはクイズ「What goes wrong if you rebase a branch that others already pulled? A. Conflicts no longer happen B. Your history diverges from others' C. Merge commits increase D. The branch is deleted (explain why)」。ユーザー発言: 「/rikai off」次の応答を書いて。",
+      "expected_output": "英語の会話での、言語を判断できない終了の発言。直前の出力の言語（英語）を引き継ぎ、回答本文と問いを付けずに、最終の理解度レポートを英語で出す。",
+      "files": [],
+      "expectations": [
+        "応答が英語で書かれている（言語を判断できない発言のため、直前の出力の言語を引き継ぐ。日本語になっていない）",
+        "最終の理解度レポートが英語で、gitの話題について1回だけ出ている",
+        "レポートの見出しが、既存の訳の文言「Understanding report」のままである",
+        "レポートの回答番号が1である",
+        "前回のクイズの論点が、返答がない箇所に当たる項目に残っている",
+        "新しい回答本文、判定結果、問いのいずれも付いていない"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "/rikai",
+      "expected_output": "環境: Claude Code。会話の最初の発言が `/rikai` だけの起動。言語の手がかりが無いので、起動の応答を日本語で出す。依頼が無いので、回答本文、レポート、問いは付かない。",
+      "files": [],
+      "expectations": [
+        "rikaiを有効にした旨の1行が日本語で書かれている",
+        "レポート形式の提案が付く場合（ファイル保存が可能な環境）は、それも日本語で書かれている",
+        "回答本文、理解度レポート、問いのいずれも付いていない"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "rikai有効中の会話。これまでのユーザーの発言とrikaiの出力は、すべて英語。gitのrebaseとmergeを説明済み。レポートの見出しは「Understanding report: git rebase vs merge」で、回答番号1。返答がない欄に「How history is kept」「Problems with rebasing a shared branch」。前回の問いはクイズ「What goes wrong if you rebase a branch that others already pulled? A. Conflicts no longer happen B. Your history diverges from others' C. Merge commits increase D. The branch is deleted (explain why)」。ユーザー発言: 「B, because rebasing reduces the number of commits.」次の応答を書いて。",
+      "expected_output": "英語の会話で、選択は合っているが理由が違う返答。判定結果（一部理解した）、レポート（回答番号2）、問い1問が英語で出る。「一部理解した箇所」に当たる項目の `不足` のラベルも英語に訳される。",
+      "files": [],
+      "expectations": [
+        "判定結果が「一部理解した」に当たる内容で、英語で書かれている（選択Bは正しいが、理由「コミットが減るから」は不一致）",
+        "判定結果に、正解がBであることと、理由の補足（コミットのハッシュが変わり、他の人の履歴と食い違うこと）が英語で含まれる",
+        "レポートの、一部理解した箇所に当たる項目に、共有済みブランチのrebaseの件が1行で入っている",
+        "その行の不足を示すラベルが英語に訳されている（「不足」のまま残っていない）",
+        "レポートの見出しが、既存の訳の文言「Understanding report」のままで、回答番号が2である",
+        "新しい回答本文は作られていない",
+        "応答の最後尾に問いがちょうど1問あり、英語で書かれている"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "rikai有効中の会話。これまでのユーザーの発言とrikaiの出力は、すべて英語。gitのrebaseとmergeを説明済み。レポートの見出しは「Understanding report: git rebase vs merge」で、回答番号1。返答がない欄に「How history is kept」「Problems with rebasing a shared branch」。前回の問いはクイズ「What goes wrong if you rebase a branch that others already pulled? A. Conflicts no longer happen B. Your history diverges from others' C. Merge commits increase D. The branch is deleted (explain why)」。ユーザー発言: 「ごめん、やっぱり日本語で。共有済みブランチをrebaseすると何がまずいのか、まだよく分からない。」次の応答を書いて。",
+      "expected_output": "英語の会話の途中で、ユーザーが日本語に戻したターン。出力はすべて日本語に切り替わり、レポートは日本語の雛形の文言どおりに書き直される。発言を前回のクイズへの返答として判定するかは問わない。",
+      "files": [],
+      "expectations": [
+        "回答本文、レポート、問いがすべて日本語で書かれている",
+        "レポートの見出しが「理解度レポート: <話題>」の形で、話題名も日本語に書き直されている（「Understanding report」「git rebase vs merge」のまま残っていない）",
+        "ラベル（「回答番号」、概要を出す場合は「概要」）と4つの項目の見出しが、日本語の雛形の文言のまま書かれている",
+        "既存の項目（履歴の残り方の違い）も、日本語に書き直されている",
+        "回答本文が、共有済みブランチのrebaseの問題の説明になっている",
+        "応答の最後尾に問いがちょうど1問あり、日本語で書かれている"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "rikai有効中の会話。これまでのユーザーの発言とrikaiの出力は、すべて英語。TLSハンドシェイクを説明済み（暗号スイートの合意、証明書によるサーバー認証、共通鍵の共有）。レポートの見出しは「Understanding report: TLS handshake」で、回答番号1。返答がない欄に「The handshake flow」。前回の問いは質問提案「What does it actually mean to authenticate the server with a certificate?」。ユーザー発言: 「What does it actually mean to authenticate the server with a certificate?」次の応答を書いて。",
+      "expected_output": "英語の会話での、詳細を詰める型の質問のターン。回答本文、「『○○』を理解できていない箇所として記録した」に当たる1行、レポート（回答番号2）、問い1問が、すべて英語で出る。",
+      "files": [],
+      "expectations": [
+        "回答本文が、証明書によるサーバー認証の具体的な説明で、英語で書かれている",
+        "判定結果の位置に、「『…』を理解できていない箇所として記録した」に当たる1行が英語で書かれている",
+        "採点や、正解の提示をしていない",
+        "レポートの見出しが既存の訳の文言「Understanding report」のままで、回答番号が2である",
+        "レポートの、理解できてない箇所に当たる項目に、証明書によるサーバー認証の件が英語の1行で入っている",
+        "応答の最後尾に問いがちょうど1問あり、英語で書かれている"
+      ]
     }
   ]
 }
