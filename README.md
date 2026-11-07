@@ -21,7 +21,7 @@ claude plugin marketplace add kokuto821/rikai
 claude plugin install rikai@rikai
 ```
 
-通常のチャットでは、`skills/rikai/SKILL.md` の内容を指示として貼る。スクリプトは使えないので、質問提案とクイズの別は、直前に出した問いと逆の種別（最初は質問提案）で決まる。
+通常のチャットでは、`skills/rikai/SKILL.md` の内容を指示として貼る。claude.ai のチャットに `rikai.zip` で登録した場合も含め、Claude Code 以外ではスクリプトを実行しないので、質問提案とクイズの別は、直前に出した問いと逆の種別（最初は質問提案）で決まる。
 
 ## 使い方
 
