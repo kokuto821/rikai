@@ -1,13 +1,37 @@
 # rikai 評価結果
 
 - 対象スキル: `skills/rikai/SKILL.md`
-- 評価日: 2026-10-30（eval は iteration 2、trigger は iteration 3）
-- 評価モデルと effort: iteration 1 は実行・採点・trigger の改善案ともに `claude-sonnet-5-5`（effort 不明）。iteration 2 の実行は subagent（モデル不明、effort `lower`）。採点は評価セッション内で expectations に照らして手動で行い、grader subagent は使っていない。iteration 3 の trigger は `claude -p` の既定モデル（`claude-opus-5-5`）
-- 合否判定: **PASS**（iteration 2 の eval スキルあり合格率 100%（38/38）。合格基準は 90%。未採点のケースなし。iteration 3 の trigger は 15/15 合格）
+- 評価日: 2026-11-08（eval は iteration 4、trigger は iteration 3（2026-10-30））
+- 評価モデルと effort: iteration 4 の実行は `claude -p --plugin-dir` の既定モデル（`claude-opus-5-5`、effort は既定）で、採点は評価セッション内の手動判定。iteration 1 は実行・採点・trigger の改善案ともに `claude-sonnet-5-5`（effort 不明）。iteration 2 の実行は subagent（モデル不明、effort `lower`）。採点は評価セッション内で expectations に照らして手動で行い、grader subagent は使っていない。iteration 3 の trigger は `claude -p` の既定モデル（`claude-opus-5-5`）
+- 合否判定: **PASS**（iteration 4 の eval スキルあり合格率 100%（103/103）。合格基準は 90%。未採点のケースなし。iteration 3 の trigger は 15/15 合格）
 - 改善案: 下の「改善案」を参照。**いずれも `SKILL.md` に未反映**
-- 生出力: eval は `eval-result/iterations/rikai/iteration-2/`（`eval-<ID>/<with_skill|without_skill>/run-1/outputs/` と採点・タイミング）、trigger は `eval-result/iterations/rikai/iteration-3/trigger/`（逐次は `result.json`、並列の比較は `result-parallel.json`）。`iterations/` は git 管理外
+- 生出力: eval は `eval-result/iterations/rikai/iteration-4/`（スキルありのみ。iteration 2 は `iteration-2/`）（`eval-<ID>/<with_skill|without_skill>/run-1/outputs/` と採点・タイミング）、trigger は `eval-result/iterations/rikai/iteration-3/trigger/`（逐次は `result.json`、並列の比較は `result-parallel.json`）。`iterations/` は git 管理外
 
 ## 最新の結果
+
+### eval（2026-11-08、iteration 4）
+
+#30（出力をユーザーの発言の言語で作る）の確認。現行の `evals.json` の 15 件（言語のケース 6〜15 を含む）を、スキルありだけで 1 回ずつ実行した。スキルなしとの比較は行っていない。言語の切り替えは、スキルなしでは確かめようがないため。
+
+| eval | 内容 | スキルあり |
+|------|------|-----------|
+| 1〜5 | 既存の日本語ケース（回帰の確認） | 38/38 |
+| 6 | 英語での起動と依頼 | 7/7 |
+| 7 | 日本語の会話の途中での英語の返答 | 10/10 |
+| 8 | 英語の用語を混ぜた日本語での起動 | 6/6 |
+| 9 | 日本語を引用した英語での起動 | 6/6 |
+| 10 | 英語の会話での話題の切り替え | 8/8 |
+| 11 | 英語の会話での終了 | 6/6 |
+| 12 | 手がかりの無い起動 | 3/3 |
+| 13 | 英語でのクイズへの返答（一部理解） | 7/7 |
+| 14 | 英語の会話の途中での日本語への切り替え | 6/6 |
+| 15 | 英語での詳細を詰める質問 | 6/6 |
+| 合計 | | **103/103（100%）** |
+
+- 計測手順: リポジトリの外の空のディレクトリで、`claude -p --plugin-dir <リポジトリ> --allowedTools Skill "Bash(node:*)"` にプロンプトを stdin で渡す。`/rikai` で始まらないケース（会話の途中）は、`--append-system-prompt` で、スキルを読み込んでから次の応答だけを出すよう指示した。プロンプトを引数で渡すと、`--allowedTools` に飲み込まれて失敗する。
+- 計測の汚れ: ユーザー設定のプラグイン（genshijin）が読み込まれ、eval 1・8 の文体が圧縮された。言語の判定には影響しない。文体まで測るなら、ユーザー設定を切り離して実行する。
+- 気づいた点: eval 6（英語）では、起動直後の最初の回答に「New report: …」の通知が出た。日本語の eval 1 では出ていない。expectations の対象外で、仕様との照合はまだ行っていない。
+- 全件合格で、天井効果は続いている。
 
 ### eval（2026-10-30、iteration 2）
 
@@ -80,4 +104,5 @@ iteration 1（2026-10-29）の再現率 8〜17% は、スキルではなく計�
 | 2026-10-29 | 1 | eval | 合格率 100%（スキルなしは 53%） | 不明 | 短縮前のプロンプト。判定 PASS |
 | 2026-10-29 | 1 | trigger | 発火率 8〜17%（誤発火 0%） | 不明 | ループは 3 反復目で異常終了 |
 | 2026-10-30 | 2 | eval | 合格率 100%（スキルなしは 50%） | lower（subagent） | 現行 evals.json。採点は手動。判定 PASS |
+| 2026-11-08 | 4 | eval | 合格率 100%（103/103、スキルありのみ） | 既定 | #30 の言語ケース 6〜15 を追加。採点は手動。判定 PASS |
 | 2026-10-30 | 3 | trigger | 発火率 100%（誤発火 0%）、15/15 合格 | 不明 | リポジトリの外で逐次実行。iteration 1 の低い発火率は計測の欠陥と判明 |
