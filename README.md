@@ -1,5 +1,7 @@
 # rikai
 
+[English](README.en.md)
+
 ## これは何？
 
 rikaiはAIの回答のたびにユーザーの理解を確かめて、理解を深めるためのモード（Claudeのスキル）です。
