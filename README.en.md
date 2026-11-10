@@ -6,7 +6,7 @@ This is a translation. The Japanese [README.md](README.md) is the source of trut
 
 ## What is this?
 
-rikai (理解, "understanding") is a mode (a Claude skill) that checks your understanding after every AI answer and helps you deepen it.
+rikai (理解, "understanding") is an AgentSkill that checks your understanding after every AI answer and helps you deepen it.
 
 - Start and stop: Start it with `/rikai` or "start rikai". Turn it off with `/rikai off` or "stop rikai".
 - Output for each answer: answer body → judgement (when you replied to the previous question, or asked for details) → understanding report → one question, in that order.
