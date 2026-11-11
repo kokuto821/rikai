@@ -1,13 +1,28 @@
 # rikai 評価結果
 
 - 対象スキル: `skills/rikai/SKILL.md`
-- 評価日: 2026-10-30（eval は iteration 2、trigger は iteration 3）
-- 評価モデルと effort: iteration 1 は実行・採点・trigger の改善案ともに `claude-sonnet-5-5`（effort 不明）。iteration 2 の実行は subagent（モデル不明、effort `lower`）。採点は評価セッション内で expectations に照らして手動で行い、grader subagent は使っていない。iteration 3 の trigger は `claude -p` の既定モデル（`claude-opus-5-5`）
-- 合否判定: **PASS**（iteration 2 の eval スキルあり合格率 100%（38/38）。合格基準は 90%。未採点のケースなし。iteration 3 の trigger は 15/15 合格）
-- 改善案: 下の「改善案」を参照。**いずれも `SKILL.md` に未反映**
-- 生出力: eval は `eval-result/iterations/rikai/iteration-2/`（`eval-<ID>/<with_skill|without_skill>/run-1/outputs/` と採点・タイミング）、trigger は `eval-result/iterations/rikai/iteration-3/trigger/`（逐次は `result.json`、並列の比較は `result-parallel.json`）。`iterations/` は git 管理外
+- 評価日: 2026-10-30（eval は iteration 2、trigger は iteration 3）。2026-11-11 に、eval 1・16 だけを iteration 5 で測定（#21）
+- 評価モデルと effort: iteration 1 は実行・採点・trigger の改善案ともに `claude-sonnet-5-5`（effort 不明）。iteration 2 の実行は subagent（モデル不明、effort `lower`）。採点は評価セッション内で expectations に照らして手動で行い、grader subagent は使っていない。iteration 3 の trigger は `claude -p` の既定モデル（`claude-opus-5-5`）。iteration 5 の実行は subagent（モデルは評価セッションと同じ `claude-opus-5-5`、effort `lower`）で、採点は iteration 2 と同じく手動
+- 合否判定: **PASS**（iteration 2 の eval スキルあり合格率 100%（38/38）。合格基準は 90%。未採点のケースなし。iteration 3 の trigger は 15/15 合格。iteration 5 の eval 1・16 はスキルあり 15/15）
+- 改善案: 下の「改善案」を参照。改善案2は #21 で反映済み。**ほかは `SKILL.md` に未反映**
+- 生出力: eval は `eval-result/iterations/rikai/iteration-2/`（`eval-<ID>/<with_skill|without_skill>/run-1/outputs/` と採点・タイミング）、iteration 5 は `eval-result/iterations/rikai/iteration-5/`、trigger は `eval-result/iterations/rikai/iteration-3/trigger/`（逐次は `result.json`、並列の比較は `result-parallel.json`）。`iterations/` は git 管理外
 
 ## 最新の結果
+
+### eval（2026-11-11、iteration 5）
+
+#21 の回答番号の修正後に、起動と依頼を別の発言にしたケース（eval 16）を足し、起動と同じ発言の依頼（eval 1）とあわせて測った。比較はスキルあり・なし。1 ケース 1 回の実行（`run-1` のみ）。採点は expectations 15 項目を手動で判定。eval 16 の並び順の項目（7項目目）は、レビューを受けて追加したあと、既存の `run-1` の出力に照らして採点し直した（再実行なし）。
+
+| eval | 内容 | スキルあり | スキルなし |
+|------|------|-----------|-----------|
+| 1 | 起動と同じ発言の依頼 | 8/8 | 2/8 |
+| 16 | 起動だけの発言の次の発言での依頼 | 7/7 | 4/7 |
+| 合計 | | **15/15（100%）** | **6/15（40%）** |
+
+- eval 16 のスキルありは、起動の通知を繰り返さず、回答番号 1 のレポートを出した。
+- スキルなしの主な欠落: 理解度レポート（eval 1・16）、rikai 有効化の通知と問い（eval 1）。
+- 気づいた点（採点の対象外）: eval 16 のスキルありは、最初のレポートの前に「新レポート: <topic>」の通知を出した。eval 1 のスキルありは出していない。最初の話題で通知を出すかは、仕様に書かれていない（改善案4）。
+- 制約: 会話途中の状態は書き起こしで再現。スキルありの実行はファイル保存・`pick.mts`・`.rikai/` を行っていない。
 
 ### eval（2026-10-30、iteration 2）
 
@@ -65,13 +80,14 @@ iteration 1（2026-10-29）の再現率 8〜17% は、スキルではなく計�
 - **並列で実行した**（`--num-workers 10`）: 各 worker が同じディレクトリに、同じ description の偽コマンドを置く。モデルが他の worker の偽コマンドを選ぶと、発火なしと数えられる。リポジトリの外でも並列のままでは、発火すべき発話の発火は 2/18 回だった（`result-parallel.json`）。
 - 2 反復目の description の書き換えが改善しなかったのも、同じ欠陥のためで、description の良し悪しは測れていない。
 
-## 改善案（未反映）
+## 改善案
 
 反映は `create-skill` 側で、人が承認して行う。
 
 1. **発火精度の仕様の根拠（優先度: 中）**: iteration 3 では名指しなしの自然言語（「クイズで確かめてくれるモードにして」「理解度チェックしながら説明してほしい」）も発火した。ただし、仕様にも description にも、これらで起動する根拠が無い。発火を仕様として認めるなら、`openspec/specs/rikai-session-mode` の起動の定義を直す。認めないなら、trigger の期待値を見直す。iteration 1 の「発火しない」という前提は計測の欠陥によるもので、description の書き換えは不要。
-2. **仕様の食い違い**: 起動の次のターンの回答番号が 1 になる根拠が、`rikai-session-mode`（「次の回答を 1 とする」）と `rikai-question-selection`（数える条件）で食い違う。今回は、起動と依頼を同じ発言にして回避した。仕様の修正は、別 issue か OpenSpec で扱う。
-3. **eval の強化**: ケースを厳しくする（複数ターン、二重起動、話題への復帰、ファイル保存）。弱い期待値を直す。eval 1 の期待値 6 はスキルなしでも自明に通る。eval 4 の期待値 4 は 2 条件が混在している。eval 5 に「終了した旨の一言」の確認がない。eval 3 に、質問提案かクイズかの種別を確かめる項目がない。
+2. **仕様の食い違い（#21 で反映済み）**: 起動の次のターンの回答番号が 1 になる根拠が、`rikai-session-mode`（「次の回答を 1 とする」）と `rikai-question-selection`（数える条件）で食い違っていた。#21 で、起動の後、数えた回答がまだ無ければ次の回答を 1 として数える規則に揃えた。eval 16 で測定した（iteration 5）。
+3. **eval の強化**: ケースを厳しくする（複数ターン、二重起動、話題への復帰、ファイル保存）。弱い期待値を直す。eval 1 の期待値 6 はスキルなしでも自明に通る。eval 4 の期待値 4 は 2 条件が混在している。eval 5 に「終了した旨の一言」の確認がない。eval 3 に、質問提案かクイズかの種別を確かめる項目がない。#21 で入れた規則のうち、「数えた回答が無いまま終了したときは、終了の1行だけを出す」と「最初の回答より前の二重起動で、回答番号が 1 になる」は、まだ eval で測っていない。どちらも1ターンで測れる。
+4. **最初の話題の「新レポート」通知（優先度: 低）**: iteration 5 の eval 16 のスキルありは、最初のレポートの前に「新レポート: <topic>」を出した。eval 1 では出していない。最初の話題で通知を出すかは、`rikai-session-mode` にも `SKILL.md` にも書かれていない。出す・出さないを仕様で決める。
 
 ## 履歴
 
@@ -81,3 +97,4 @@ iteration 1（2026-10-29）の再現率 8〜17% は、スキルではなく計�
 | 2026-10-29 | 1 | trigger | 発火率 8〜17%（誤発火 0%） | 不明 | ループは 3 反復目で異常終了 |
 | 2026-10-30 | 2 | eval | 合格率 100%（スキルなしは 50%） | lower（subagent） | 現行 evals.json。採点は手動。判定 PASS |
 | 2026-10-30 | 3 | trigger | 発火率 100%（誤発火 0%）、15/15 合格 | 不明 | リポジトリの外で逐次実行。iteration 1 の低い発火率は計測の欠陥と判明 |
+| 2026-11-11 | 5 | eval | eval 1・16 のみ。合格率 100%（15/15。スキルなしは 6/15） | lower（subagent） | #21。採点は手動 |
