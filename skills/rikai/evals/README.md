@@ -2,8 +2,8 @@
 
 別エージェントが起草し、別のエージェントが仕様の本文と照らして見直した。SKILL.md の実装ではなく、README.md と `openspec/specs/` から期待挙動を導いた。
 
-- `evals.json`: 起動後の振る舞いを1ターンで測るケース16件（起動と依頼、クイズへの返答、詳細を詰める質問、話題の切り替え、終了、英語での起動と依頼、日本語の会話の途中での英語の返答、英語の用語を混ぜた日本語での起動、日本語を引用した英語での起動、英語の会話での話題の切り替え、英語の会話での終了、手がかりの無い起動、英語でのクイズへの返答（一部理解）、英語の会話の途中での日本語への切り替え、英語での詳細を詰める質問、起動だけの発言の次の発言での依頼）。6〜15件目は #30 で、`rikai-session-mode` の「出力の言語をユーザーの発言の言語に合わせる」と、`rikai-understanding-report` の「レポートの雛形」から導いて足した。16件目は #21 で、`rikai-question-selection` の「質問提案とクイズの別と回答番号を決める」と、`rikai-session-mode` の「起動の応答は有効化の通知と形式の提案だけにする」から導いて足した。skill-creator の schemas.md の形式（`skill_name` / `evals[].id, prompt, expected_output, files, expectations`）。セッション途中の状態は、prompt 内に会話の要約として埋め込む。
-- `trigger-evals.json`: description 最適化用。`{query, should_trigger}` の配列で、true 6件・false 9件。false には、近接ケース（rikai自体の開発、一回きりのクイズ作成、面接練習、eval作成の依頼）を含める。
+- `evals.json`: 起動後の振る舞いを1ターンで測るケース21件（起動と依頼、クイズへの返答、詳細を詰める質問、話題の切り替え、終了、英語での起動と依頼、日本語の会話の途中での英語の返答、英語の用語を混ぜた日本語での起動、日本語を引用した英語での起動、英語の会話での話題の切り替え、英語の会話での終了、手がかりの無い起動、英語でのクイズへの返答（一部理解）、英語の会話の途中での日本語への切り替え、英語での詳細を詰める質問、起動だけの発言の次の発言での依頼、名指ししない起動と依頼、起動か判断できない依頼、名指ししない終了、今の問いだけを断る発言、起動の確認への肯定）。6〜15件目は #30 で、`rikai-session-mode` の「出力の言語をユーザーの発言の言語に合わせる」と、`rikai-understanding-report` の「レポートの雛形」から導いて足した。16件目は #21 で、`rikai-question-selection` の「質問提案とクイズの別と回答番号を決める」と、`rikai-session-mode` の「起動の応答は有効化の通知と形式の提案だけにする」から導いて足した。17〜21件目は #18 で、`rikai-session-mode` の「起動と終了の指示を受け付ける」から導いて足した。skill-creator の schemas.md の形式（`skill_name` / `evals[].id, prompt, expected_output, files, expectations`）。セッション途中の状態は、prompt 内に会話の要約として埋め込む。
+- `trigger-evals.json`: description 最適化用。`{query, should_trigger}` の配列で、true 6件・false 10件。true には、名指ししない起動の依頼を含める。false には、起動か判断できない依頼（#18。Claude Code ではスキルを読み込まずに答えるため。読み込まれているときの確認の1行は、`evals.json` の18件目で測る）と、近接ケース（rikai自体の開発、一回きりのクイズ作成、面接練習、eval作成の依頼）を含める。
 
 ## 1ターンで測れない性質（evals.json では未検証）
 
