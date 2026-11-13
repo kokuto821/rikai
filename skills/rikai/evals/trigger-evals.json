@@ -24,6 +24,10 @@
     "should_trigger": true
   },
   {
+    "query": "Reactのhooks、ちゃんと理解できてるか確かめてほしい",
+    "should_trigger": false
+  },
+  {
     "query": "rikaiスキルのSKILL.mdの第4節に、クイズの選択肢を5個にする例外を足したい。openspecのspecも直してPRまで出して",
     "should_trigger": false
   },
