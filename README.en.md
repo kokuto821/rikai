@@ -65,11 +65,14 @@ You ask AI to change the color of the submit button. The AI rewrites `--color-pr
 
 ### Without rikai
 
-> **User**: Make the submit button blue.
+> **User**\
+> Make the submit button blue.
 >
-> **AI**: I changed `--color-primary` to blue. Shall I merge next?
+> **AI**\
+> I changed `--color-primary` to blue. Shall I merge next?
 >
-> **User**: Please.
+> **User**\
+> Please.
 
 The change gets merged before you notice that other buttons and links change color too.
 
@@ -77,18 +80,23 @@ The change gets merged before you notice that other buttons and links change col
 
 This scene is in Claude Code, after rikai has been started. For explanation, the understanding report attached to the first answer is omitted, and some parts are tidied up.
 
-> **User**: Make the submit button blue.
+> **User**\
+> Make the submit button blue.
 >
-> **AI**: I changed `--color-primary` to blue.
+> **AI**\
+> I changed `--color-primary` to blue.
 >
-> **Question**: Where does the color change with this edit? Give your reason too.
-> A. Only the submit button
-> B. Everywhere that uses `--color-primary`
+> **Question**: Where does the color change with this edit? Give your reason too.\
+> A. Only the submit button\
+> B. Everywhere that uses `--color-primary`\
 > C. All buttons
 >
-> **User**: A. Because I asked to make the submit button blue.
+> **User**\
+> A. Because I asked to make the submit button blue.
 >
-> **AI**: Judgement: Not yet understood
+> **AI**\
+> Judgement: Not yet understood
+>
 > The answer is B. What was changed is not a color just for the submit button, but a shared variable. Other buttons and links that use the same variable change color too.
 
 Before merging, you can see the gap between what you expected and what actually changed. The result is kept in the report.
