@@ -20,6 +20,8 @@ It works well in situations like these:
 
 ## Installation
 
+Currently, rikai supports Claude Code (as a plugin) and skill upload in Claude on the web (ZIP). To use it in other environments, place the `SKILL.md` from the ZIP where that environment keeps its skills (this has not been tested).
+
 ### Claude Code
 
 In Claude Code, install it as a plugin. Run the following commands in order in the Claude Code input box.
@@ -29,9 +31,9 @@ In Claude Code, install it as a plugin. Run the following commands in order in t
 /plugin install rikai@rikai
 ```
 
-### Registering from a ZIP file (claude.ai and similar)
+### Registering from a ZIP file
 
-Use the dedicated ZIP for Claude's skill registration feature. A ZIP of the whole repository from GitHub's "Download ZIP" also contains the plugin settings and development files, so it may fail to register. The dedicated ZIP contains only `SKILL.md`, the skill itself.
+Use the dedicated ZIP for registration. The ZIP you get from GitHub's "Download ZIP" contains extra files, so it may fail to register.
 
 Download the dedicated ZIP file from the link below.
 
@@ -145,7 +147,7 @@ Records points under the four categories above, for each topic. By default it is
 
 ### Environment
 
-Use it as a plugin in Claude Code, or register it as a ZIP on claude.ai and similar. The script and file saving are extra features used only in Claude Code.
+Use it as a plugin in Claude Code, or register it as a ZIP in Claude on the web. The script and file saving are extra features used only in Claude Code.
 
 ### Language
 
@@ -166,5 +168,3 @@ Claude Code may show a prediction of your next message in faint text in the inpu
 ## License
 
 [MIT License](LICENSE)
-
-The thumbnail lettering uses GLF Amara by Gliftype Foundry (SIL Open Font License 1.1).

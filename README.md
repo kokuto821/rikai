@@ -18,6 +18,8 @@ rikaiはAIの回答のたびにユーザーの理解を確かめて、物事の�
 
 ## 導入
 
+現時点では、Claude Codeのpluginと、Web版のClaudeのスキル登録（ZIP）に対応しています。ほかの環境で使う場合は、ZIPに入っている `SKILL.md` をその環境のスキルの置き場所に置いてください（動作は確認していません）。
+
 ### Claude Code
 
 Claude Codeでは、pluginとして導入します。Claude Codeの入力欄で、次のコマンドを順に実行します。
@@ -27,9 +29,9 @@ Claude Codeでは、pluginとして導入します。Claude Codeの入力欄で�
 /plugin install rikai@rikai
 ```
 
-### ZIPファイルからの登録（claude.aiなど）
+### ZIPファイルからの登録
 
-Claudeのスキル登録機能には登録専用のZIPを使ってください。GitHubの「Download ZIP」で取得したリポジトリ全体のZIPには、pluginの設定や開発用のファイルも含まれるため、登録できない場合があります。専用のZIPにはスキル本体の `SKILL.md` だけを入れています。
+登録には専用のZIPを使ってください。GitHubの「Download ZIP」で取得したZIPは、余分なファイルを含むため登録できない場合があります。
 
 以下のリンクから、登録専用のZIPファイルをダウンロードします。
 
@@ -143,7 +145,7 @@ Claude Codeでは、質問提案とクイズのどちらを出すかをスクリ
 
 ### 環境
 
-Claude Codeではpluginとして、claude.aiなどではZIPで登録して使います。スクリプトとファイル保存は、Claude Codeでだけ使う追加の機能です。
+Claude Codeではpluginとして、Web版のClaudeではZIPで登録して使います。スクリプトとファイル保存は、Claude Codeでだけ使う追加の機能です。
 
 ### 言語
 
@@ -164,5 +166,3 @@ Claude Codeは入力欄に次の発言の予測を薄い文字で出すことが
 ## ライセンス
 
 [MIT License](LICENSE)
-
-サムネイル画像の文字はGliftype FoundryのGLF Amara（SIL Open Font License 1.1）で描いています。
