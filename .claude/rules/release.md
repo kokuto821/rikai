@@ -23,7 +23,7 @@ rikaiのバージョニング、リリース手順、リリースノート、ブ
 ## バージョン
 
 - バージョンの正は `plugin.json` の `version`。`marketplace.json` と `package.json` には書かない。
-- 初回は `0.1.0` とする。次回のリリースは、変更の種類にかかわらず `1.0.0` にする。それ以降は下の SemVer の判定に従う。
+- 初回は `1.0.0` とする。以降は下の SemVer の判定に従う。
 - [SemVer 2.0.0](https://semver.org/lang/ja/) に従う。公開APIは `openspec/specs/` が定める振る舞いとする。
   - major：要件の削除、非互換な変更。仕様に書かれた表記（バッジ表記など）の変更も含む。
   - minor：要件の追加。
@@ -33,13 +33,16 @@ rikaiのバージョニング、リリース手順、リリースノート、ブ
 
 1. リリース専用の作業ブランチ `chore/#N_release-vX.Y.Z` を切り、`plugin.json` の `version` を上げる。
 2. PRで `main` にマージする。
-3. `main` を最新にし、マージ後のコミットにタグ `vX.Y.Z` を打ってpushする。
-4. `git switch --detach vX.Y.Z` でタグのコミットに移り、`git status --porcelain` が空であることを確かめる。
-5. `npm ci` を実行し、既存の `rikai.zip` を消してから `npm run build:zip` を実行する。
-6. 生成に成功した場合だけ、`gh release create vX.Y.Z rikai.zip --verify-tag` でGitHub Releaseを作る。リリースノートは `--notes-file` で渡す。
-7. `git switch main` で戻る。
+3. `main` を最新にし、`git status --porcelain` が空であることを確かめる。`npm ci` を実行し、既存の `rikai.zip` を消してから `npm run build:zip` を実行する。
+4. 生成したZIPをclaude.aiに登録し、`/rikai` で起動できることを確かめる。確かめられなかった場合は、修正をissue経由で `main` に入れ、`version` は変えずに手順3からやり直す。
+5. 確かめられた場合だけ、手順3のコミットにタグ `vX.Y.Z` を打ってpushする。
+6. `git switch --detach vX.Y.Z` でタグのコミットに移り、`git status --porcelain` が空であることを確かめる。
+7. `npm ci` を実行し、既存の `rikai.zip` を消してから `npm run build:zip` を実行する。
+8. 生成に成功した場合だけ、`gh release create vX.Y.Z rikai.zip --verify-tag` でGitHub Releaseを作る。リリースノートは `--notes-file` で渡す。
+9. `git switch main` で戻る。
 
-- `rikai.zip` は作業ツリーの `SKILL.md` をそのまま固める。タグと異なる内容を配布しないよう、手順4の確認と手順5の削除を省かない。
+- rulesetでタグを消せないため、タグを打ったあとに不具合が見つかると、patchを上げて出し直すことになる。
+- `rikai.zip` は作業ツリーの `SKILL.md` をそのまま固める。タグと異なる内容を配布しないよう、手順3と手順6の `git status --porcelain` の確認と、手順3と手順7の `rikai.zip` の削除を省かない。
 - 長命のリリースブランチ（`release/*` など）は作らない。
 - 通常の機能PRでは `version` を触らない。
 
