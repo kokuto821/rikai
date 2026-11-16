@@ -1,5 +1,7 @@
 # rikai
 
+![rikai](assets/thumbnail.png)
+
 [English](README.en.md)
 
 ## これは何？
@@ -141,3 +143,5 @@ Claude Codeは入力欄に次の発言の予測を薄い文字で出すことが
 ## ライセンス
 
 [MIT License](LICENSE)
+
+サムネイル画像の文字はGliftype FoundryのGLF Amara（SIL Open Font License 1.1）で描いています。

@@ -1,5 +1,7 @@
 # rikai
 
+![rikai](assets/thumbnail.png)
+
 [日本語](README.md)
 
 This is a translation. The Japanese [README.md](README.md) is the source of truth.
@@ -143,3 +145,5 @@ Claude Code may show a prediction of your next message in faint text in the inpu
 ## License
 
 [MIT License](LICENSE)
+
+The thumbnail lettering uses GLF Amara by Gliftype Foundry (SIL Open Font License 1.1).
