@@ -18,6 +18,27 @@ It works well in situations like these:
 - When you have AI write code or documents, and want to understand them before moving on
 - When you want to ask AI about a concept you looked up in a book or online that you did not understand, or check whether your understanding is right
 
+## Installation
+
+### Claude Code
+
+In Claude Code, install it as a plugin. Run the following commands in order in the Claude Code input box.
+
+```text
+/plugin marketplace add kokuto821/rikai
+/plugin install rikai@rikai
+```
+
+### Registering from a ZIP file (claude.ai and similar)
+
+Use the dedicated ZIP for Claude's skill registration feature. A ZIP of the whole repository from GitHub's "Download ZIP" also contains the plugin settings and development files, so it may fail to register. The dedicated ZIP contains only `SKILL.md`, the skill itself.
+
+Download the dedicated ZIP file from the link below.
+
+- [rikai.zip (download the latest version)](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
+
+Upload the downloaded `rikai.zip` to Claude's skill registration screen as is, without unzipping it.
+
 ## Background and problem
 
 Generative AI has become an everyday tool. You can now create code and documents without understanding what is inside. Just reading the code and documents AI wrote, or listening to its explanations, does not tell you whether you really understand them. The same is true when someone explains something to you, or when you read a book. You move on while only thinking you understand.
@@ -129,27 +150,6 @@ Use it as a plugin in Claude Code, or register it as a ZIP on claude.ai and simi
 ### Language
 
 The output follows the language you write in. If you talk to it in English, the questions and reports are in English too.
-
-## Installation
-
-### Claude Code
-
-In Claude Code, install it as a plugin. Run the following commands in order in the Claude Code input box.
-
-```text
-/plugin marketplace add kokuto821/rikai
-/plugin install rikai@rikai
-```
-
-### Registering from a ZIP file (claude.ai and similar)
-
-Use the dedicated ZIP for Claude's skill registration feature. A ZIP of the whole repository from GitHub's "Download ZIP" also contains the plugin settings and development files, so it may fail to register. The dedicated ZIP contains only `SKILL.md`, the skill itself.
-
-Download the dedicated ZIP file from the link below.
-
-- [rikai.zip (download the latest version)](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
-
-Upload the downloaded `rikai.zip` to Claude's skill registration screen as is, without unzipping it.
 
 ## Using it with other skills
 
