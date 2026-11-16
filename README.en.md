@@ -1,27 +1,22 @@
 # rikai
 
+![rikai](assets/thumbnail.png)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/kokuto821/rikai)](https://github.com/kokuto821/rikai/releases)
+
 [日本語](README.md)
 
 This is a translation. The Japanese [README.md](README.md) is the source of truth.
 
 ## What is this?
 
-rikai (理解, "understanding") is an AgentSkill that checks your understanding after every AI answer and helps you deepen it.
+rikai (理解, "understanding") is an AgentSkill that checks your understanding after every AI answer and helps you understand things more deeply.
 
-- Start and stop: Start it with `/rikai` or "start rikai". Turn it off with `/rikai off` or "stop rikai". You can also start it without naming it, by asking to check your understanding as it explains, and stop it by saying you no longer want the quizzes. A one-off quiz request does not start it. If it cannot tell whether you want the mode, it may ask in one line (in Claude Code, it may just answer normally instead).
-- Output for each answer: answer body → judgement (when you replied to the previous question, or asked for details) → understanding report → one question, in that order.
-- Question: One question, either a "question suggestion" or a "quiz".
-  - Question suggestion: Suggests a question to ask next (such as "What is X?"), or prompts you to restate it in your own words as "So X means Y?".
-  - Quiz: Terms and facts are multiple choice (you also give your reason). Mechanisms and reasons are free-form.
-  - In Claude Code, a script randomly decides which one to ask. In other environments, it starts with a question suggestion and then alternates.
-- Judgement: Your reply is sorted into four categories, "Understood / Partly understood / Not yet understood / No reply", based on whether it matches the AI's interpretation. It does not guarantee that the AI's answer is correct.
-  - Points you asked about in detail, such as "What is X?", are recorded as points you do not understand yet. The report is for finding where your understanding falls short. It is not a score.
-- Understanding report: Records points under the four categories above, for each topic. By default it is shown in the chat. You can also choose to save it to a file. While file saving is on, the report is not shown in the chat.
-- Environment: Use it as a plugin in Claude Code, or register it as a ZIP on claude.ai and similar. The script and file saving are extra features used only in Claude Code.
-- Language: The output follows the language you write in. If you talk to it in English, the questions and reports are in English too.
-- Good for:
-  - When you have AI write code or documents, and want to understand them before moving on
-  - When you want to ask AI about a concept from a book that you did not understand, or check whether your understanding is right
+It works well in situations like these:
+
+- When you have AI write code or documents, and want to understand them before moving on
+- When you want to ask AI about a concept you looked up in a book or online that you did not understand, or check whether your understanding is right
 
 ## Background and problem
 
@@ -38,6 +33,8 @@ After each AI answer, it repeats the following flow.
 1. Ask one question (a question suggestion or a quiz)
 2. From your reply, judge which points you understand and which you do not
 3. Update the understanding report
+
+![rikai workflow](assets/workflow.en.png)
 
 ## Example
 
@@ -107,6 +104,32 @@ It may also prompt you to restate it in your own words. The AI does not fill in 
 
 > Try filling in Y with your own words, in the form "So changing `--color-primary` means Y?"
 
+## Details
+
+### Start and stop
+
+Start it with `/rikai` or "start rikai", and turn it off with `/rikai off` or "stop rikai". It also switches when you ask without naming it, such as asking it to check your understanding as it explains, or saying you no longer want the quizzes.
+
+### How the question is chosen
+
+In Claude Code, a script randomly decides whether to ask a question suggestion or a quiz. In other environments, it starts with a question suggestion and then alternates.
+
+### Judgement
+
+Your reply is sorted into four categories, "Understood / Partly understood / Not yet understood / No reply", based on whether it matches the AI's interpretation. It is for finding where your understanding falls short. It is neither a score nor a guarantee that the AI's answer is correct.
+
+### Understanding report
+
+Records points under the four categories above, for each topic. By default it is shown in the chat. You can also choose to save it to a file. While file saving is on, the report is not shown in the chat.
+
+### Environment
+
+Use it as a plugin in Claude Code, or register it as a ZIP on claude.ai and similar. The script and file saving are extra features used only in Claude Code.
+
+### Language
+
+The output follows the language you write in. If you talk to it in English, the questions and reports are in English too.
+
 ## Installation
 
 ### Claude Code
@@ -143,3 +166,5 @@ Claude Code may show a prediction of your next message in faint text in the inpu
 ## License
 
 [MIT License](LICENSE)
+
+The thumbnail lettering uses GLF Amara by Gliftype Foundry (SIL Open Font License 1.1).
