@@ -147,7 +147,7 @@ Start it with `/rikai` or "start rikai", and turn it off with `/rikai off` or "s
 
 ### How the question is chosen
 
-In Claude Code, a script randomly decides whether to ask a question suggestion or a quiz. In other environments, it starts with a question suggestion and then alternates.
+It starts with a question suggestion, then alternates between question suggestions and quizzes. This is the same in every environment.
 
 ### Judgement
 
@@ -155,11 +155,11 @@ Your reply is sorted into four categories, "Understood / Partly understood / Not
 
 ### Understanding report
 
-Records points under the four categories above, for each topic. By default it is shown in the chat. You can also choose to save it to a file. While file saving is on, the report is not shown in the chat.
+Records points under the four categories above, for each topic. By default it is shown in the chat. If you want it saved to a file, just say so. Unless you specify a location, it is saved to `.rikai/<topic>-rikai-report.md`. While file saving is on, the report is not shown in the chat. In environments that cannot write files (such as Claude on the web), it tells you that saving is not possible and continues in the chat.
 
 ### Environment
 
-Use it as a plugin in Claude Code, or register it as a ZIP in Claude on the web. The script and file saving are extra features used only in Claude Code.
+Use it as a plugin in Claude Code, or register it as a ZIP in Claude on the web. It works the same way in both. Saving the report to a file is available in environments that can write files, such as Claude Code.
 
 ### Language
 
