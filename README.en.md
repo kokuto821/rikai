@@ -115,11 +115,15 @@ Summary: Understanding the impact of changing the submit button color
 
 After the report, exactly one next question follows. It is either a quiz or a question suggestion. In this scene, it could look like this.
 
-**Quiz**: You answer a question that checks your understanding. Besides multiple choice like the example above, there are also free-form questions.
+#### Quiz
+
+You answer a question that checks your understanding. Besides multiple choice like the example above, there are also free-form questions.
 
 > Why do colors other than the submit button change when you change `--color-primary`?
 
-**Question suggestion**: The AI suggests a question you should ask it next.
+#### Question suggestion
+
+The AI suggests a question you should ask it next.
 
 > Try asking, "Where is `--color-primary` used?"
 
