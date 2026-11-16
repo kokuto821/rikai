@@ -49,7 +49,7 @@ For AI agents, one cause is that they are faithful to carrying out the tasks the
 
 ## Approach of this skill
 
-This skill focuses on that property: AI agents are faithful to carrying out the tasks they are asked to do. If you give the AI a procedure for checking understanding in advance, it follows that procedure faithfully too, and checks your understanding with every answer.
+This skill puts the emphasis on checking, from your own words, whether you really understand. Because AI is faithful to carrying out its tasks, once you give it a procedure for checking understanding, it checks your understanding with every answer.
 
 After each AI answer, it repeats the following flow.
 
