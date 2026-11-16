@@ -4,8 +4,6 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { expect } from "vitest";
 
-const SCRIPTS_DIR = resolve(import.meta.dirname, "../../skills/rikai/scripts");
-const PICK_SCRIPT_PATH = join(SCRIPTS_DIR, "pick.mts");
 export const BUILD_ZIP_SCRIPT_PATH = resolve(
   import.meta.dirname,
   "../../scripts/build-zip.mts",
@@ -91,18 +89,6 @@ export const createScriptResult = (
     stderr: result.stderr,
   };
 };
-
-/**
- * `pick.mts` を実行し、結果を返す。
- *
- * @param args - `pick.mts` に渡す引数
- * @param options - cwd と node の引数の指定
- * @returns 終了コード・標準出力・標準エラー
- */
-export const createPickResult = (
-  args: string[],
-  options: ScriptOptions = {},
-): ScriptResult => createScriptResult(PICK_SCRIPT_PATH, args, options);
 
 /**
  * `build-zip.mts` を実行し、結果を返す。
