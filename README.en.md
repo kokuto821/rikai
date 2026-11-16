@@ -18,6 +18,29 @@ It works well in situations like these:
 - When you have AI write code or documents, and want to understand them before moving on
 - When you want to ask AI about a concept you looked up in a book or online that you did not understand, or check whether your understanding is right
 
+## Installation
+
+Currently, rikai supports Claude Code (as a plugin) and skill upload in Claude on the web (ZIP). To use it in other environments, place the `SKILL.md` from the ZIP where that environment keeps its skills (this has not been tested).
+
+### Claude Code
+
+In Claude Code, install it as a plugin. Run the following commands in order in the Claude Code input box.
+
+```text
+/plugin marketplace add kokuto821/rikai
+/plugin install rikai@rikai
+```
+
+### Registering from a ZIP file
+
+Download the dedicated ZIP file for registration from the link below.
+
+- [rikai.zip (download the latest version)](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
+
+Upload the downloaded `rikai.zip` to Claude's skill registration screen as is, without unzipping it.
+
+Note: The ZIP you get from GitHub's "Download ZIP" contains extra files, so it may fail to register.
+
 ## Background and problem
 
 Generative AI has become an everyday tool. You can now create code and documents without understanding what is inside. Just reading the code and documents AI wrote, or listening to its explanations, does not tell you whether you really understand them. The same is true when someone explains something to you, or when you read a book. You move on while only thinking you understand.
@@ -124,32 +147,11 @@ Records points under the four categories above, for each topic. By default it is
 
 ### Environment
 
-Use it as a plugin in Claude Code, or register it as a ZIP on claude.ai and similar. The script and file saving are extra features used only in Claude Code.
+Use it as a plugin in Claude Code, or register it as a ZIP in Claude on the web. The script and file saving are extra features used only in Claude Code.
 
 ### Language
 
 The output follows the language you write in. If you talk to it in English, the questions and reports are in English too.
-
-## Installation
-
-### Claude Code
-
-In Claude Code, install it as a plugin. Run the following commands in order in the Claude Code input box.
-
-```text
-/plugin marketplace add kokuto821/rikai
-/plugin install rikai@rikai
-```
-
-### Registering from a ZIP file (claude.ai and similar)
-
-Use the dedicated ZIP for Claude's skill registration feature. A ZIP of the whole repository from GitHub's "Download ZIP" also contains the plugin settings and development files, so it may fail to register. The dedicated ZIP contains only `SKILL.md`, the skill itself.
-
-Download the dedicated ZIP file from the link below.
-
-- [rikai.zip (download the latest version)](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
-
-Upload the downloaded `rikai.zip` to Claude's skill registration screen as is, without unzipping it.
 
 ## Using it with other skills
 
@@ -166,5 +168,3 @@ Claude Code may show a prediction of your next message in faint text in the inpu
 ## License
 
 [MIT License](LICENSE)
-
-The thumbnail lettering uses GLF Amara by Gliftype Foundry (SIL Open Font License 1.1).

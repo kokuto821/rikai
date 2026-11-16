@@ -16,6 +16,29 @@ rikaiはAIの回答のたびにユーザーの理解を確かめて、物事の�
 - AIにコードやドキュメントを作ってもらい、中身を理解してから先へ進みたいとき
 - 本やインターネットで調べた概念のうち分からなかったところや、自分の理解が合っているかを、AIに尋ねて確かめたいとき
 
+## 導入
+
+現時点では、Claude Codeのpluginと、Web版のClaudeのスキル登録（ZIP）に対応しています。ほかの環境で使う場合は、ZIPに入っている `SKILL.md` をその環境のスキルの置き場所に置いてください（動作は確認していません）。
+
+### Claude Code
+
+Claude Codeでは、pluginとして導入します。Claude Codeの入力欄で、次のコマンドを順に実行します。
+
+```text
+/plugin marketplace add kokuto821/rikai
+/plugin install rikai@rikai
+```
+
+### ZIPファイルからの登録
+
+以下のリンクから、登録専用のZIPファイルをダウンロードしてください。
+
+- [rikai.zip（最新版ダウンロード）](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
+
+ダウンロードした `rikai.zip` を解凍せず、Claudeのスキル登録画面にそのままアップロードしてください。
+
+※ GitHubの「Download ZIP」で取得したZIPは、余分なファイルを含むため登録できない場合があります。
+
 ## 背景と課題
 
 生成AIは日常的な道具となり、コードやドキュメントを、中身を理解していなくても作れるようになりました。AIが作ったコードやドキュメントを読んだり、説明を聞いたりしただけでは、本当に理解しているかは自分では分かりません。人に説明してもらうときや、本を読むときも同じです。理解したつもりのまま、次へ進んでしまいます。
@@ -122,32 +145,11 @@ Claude Codeでは、質問提案とクイズのどちらを出すかをスクリ
 
 ### 環境
 
-Claude Codeではpluginとして、claude.aiなどではZIPで登録して使います。スクリプトとファイル保存は、Claude Codeでだけ使う追加の機能です。
+Claude Codeではpluginとして、Web版のClaudeではZIPで登録して使います。スクリプトとファイル保存は、Claude Codeでだけ使う追加の機能です。
 
 ### 言語
 
 出力はユーザーの発言の言語に合わせます。英語で話しかければ、問いもレポートも英語で出ます。
-
-## 導入
-
-### Claude Code
-
-Claude Codeでは、pluginとして導入します。Claude Codeの入力欄で、次のコマンドを順に実行します。
-
-```text
-/plugin marketplace add kokuto821/rikai
-/plugin install rikai@rikai
-```
-
-### ZIPファイルからの登録（claude.aiなど）
-
-Claudeのスキル登録機能には登録専用のZIPを使ってください。GitHubの「Download ZIP」で取得したリポジトリ全体のZIPには、pluginの設定や開発用のファイルも含まれるため、登録できない場合があります。専用のZIPにはスキル本体の `SKILL.md` だけを入れています。
-
-以下のリンクから、登録専用のZIPファイルをダウンロードします。
-
-- [rikai.zip（最新版ダウンロード）](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
-
-ダウンロードした `rikai.zip` を解凍せず、Claudeのスキル登録画面にそのままアップロードしてください。
 
 ## 他のスキルとの併用
 
@@ -164,5 +166,3 @@ Claude Codeは入力欄に次の発言の予測を薄い文字で出すことが
 ## ライセンス
 
 [MIT License](LICENSE)
-
-サムネイル画像の文字はGliftype FoundryのGLF Amara（SIL Open Font License 1.1）で描いています。
