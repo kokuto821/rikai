@@ -1,8 +1,10 @@
 {
   "name": "rikai",
+  "version": "1.0.0",
   "description": "AIの回答ごとに質問提案かクイズを出し、ユーザーの理解度を確かめて理解を促進するスキル",
   "author": {
     "name": "kokuto821"
   },
-  "repository": "https://github.com/kokuto821/rikai"
+  "repository": "https://github.com/kokuto821/rikai",
+  "license": "MIT"
 }
