@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>rikai のワークフロー</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&family=Noto+Serif+JP:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #ffffff; --ink: #111111; --muted: #4a4a4a; --soft: #666666;
+      --accent: #a16207; --accent-tint: rgba(250,204,21,0.22);
+      --sans: 'Geist', 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif;
+      --serif: 'Instrument Serif', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+    }
+    body { font-family: var(--sans); background: var(--paper); color: var(--ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    h1 { font-family: var(--serif); font-size: 2rem; font-weight: 400; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+    .ring { fill: none; stroke: var(--muted); stroke-width: 1.2; }
+    .spoke { fill: none; stroke: var(--soft); stroke-width: 1; stroke-dasharray: 5 4; }
+    .station { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
+    .station.focal { fill: var(--accent-tint); stroke: var(--accent); stroke-width: 1.2; }
+    .hub { fill: var(--ink); }
+    .node-name { fill: var(--ink); font: 600 15px var(--sans); text-anchor: middle; }
+    .node-name.focal { fill: var(--accent); }
+    .sub { fill: var(--soft); font: 500 12px var(--sans); text-anchor: middle; }
+    .hub-name { fill: var(--paper); font: 600 17px var(--sans); text-anchor: middle; }
+    .hub-sub { fill: var(--paper); opacity: 0.8; font: 500 12px var(--sans); text-anchor: middle; }
+    .spoke-label { fill: var(--soft); font: 500 12px var(--sans); text-anchor: middle; }
+    .note { fill: var(--muted); font: 500 13px var(--sans); }
+    .note-key { fill: var(--ink); font: 600 13px var(--sans); }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <h1>rikai のワークフロー</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="workflow-title workflow-desc">
+        <title id="workflow-title">rikai のワークフロー</title>
+        <desc id="workflow-desc">ユーザーの発言から始まり、回答本文、判定結果、理解度レポート、問い1問の5つが時計回りに循環し、判定結果が中央の理解の記録に書き込まれる。</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4a4a4a"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#a16207"/></marker>
+          <marker id="arrow-soft" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#666666"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#ffffff"/>
+        <path d="M244 80.0 H390.8" fill="none" stroke="var(--accent)" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <text class="note" x="152" y="84.5"><tspan class="note-key">/rikai</tspan> で起動</text>
+        <text class="note" x="152" y="568"><tspan class="note-key">/rikai off</tspan> で解除</text>
+        <path class="ring" d="M568.000 97.337 A232 232 0 0 1 686.843 206.929" marker-end="url(#arrow)"/>
+        <path class="ring" d="M708.526 272.000 A232 232 0 0 1 652.525 467.110" marker-end="url(#arrow)"/>
+        <path class="ring" d="M553.648 532.000 A232 232 0 0 1 407.491 532.378" marker-end="url(#arrow)"/>
+        <path class="ring" d="M308.279 468.000 A232 232 0 0 1 251.270 273.183" marker-end="url(#arrow)"/>
+        <path class="ring" d="M272.616 208.000 A232 232 0 0 1 390.891 97.796" marker-end="url(#arrow)"/>
+        <path class="spoke" d="M592.751 468.000 L518.401 364.854" marker-end="url(#arrow-soft)"/>
+        <rect x="539.1" y="395.7" width="68" height="16" fill="var(--paper)"/><text class="spoke-label" x="573.1" y="408.2">判定を記録</text>
+        <rect class="station focal" x="392" y="48" width="176" height="64" rx="6"/><text class="node-name focal" x="480.0" y="76">ユーザーの発言</text><text class="sub" x="480.0" y="96">質問・問いへの返答</text>
+        <rect class="station" x="612" y="208" width="176" height="64" rx="6"/><text class="node-name" x="700.0" y="236">回答本文</text><text class="sub" x="700.0" y="256">質問に答える</text>
+        <rect class="station" x="528" y="468" width="176" height="64" rx="6"/><text class="node-name" x="616.0" y="496">判定結果</text><text class="sub" x="616.0" y="516">返答を4区分で判定</text>
+        <rect class="station" x="256" y="468" width="176" height="64" rx="6"/><text class="node-name" x="344.0" y="496">理解度レポート</text><text class="sub" x="344.0" y="516">話題ごとに表示</text>
+        <rect class="station" x="172" y="208" width="176" height="64" rx="6"/><text class="node-name" x="260.0" y="236">問い1問</text><text class="sub" x="260.0" y="256">質問提案かクイズ</text>
+        <rect class="hub" x="372.0" y="264.0" width="216" height="96" rx="8"/><text class="hub-name" x="480" y="308">理解の記録</text><text class="hub-sub" x="480" y="334">話題ごとに4区分で蓄積</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
