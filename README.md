@@ -31,13 +31,13 @@ Claude Codeでは、pluginとして導入します。Claude Codeの入力欄で�
 
 ### ZIPファイルからの登録
 
-登録には専用のZIPを使ってください。GitHubの「Download ZIP」で取得したZIPは、余分なファイルを含むため登録できない場合があります。
-
-以下のリンクから、登録専用のZIPファイルをダウンロードします。
+以下のリンクから、登録専用のZIPファイルをダウンロードしてください。
 
 - [rikai.zip（最新版ダウンロード）](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
 
 ダウンロードした `rikai.zip` を解凍せず、Claudeのスキル登録画面にそのままアップロードしてください。
+
+※ GitHubの「Download ZIP」で取得したZIPは、余分なファイルを含むため登録できない場合があります。
 
 ## 背景と課題
 

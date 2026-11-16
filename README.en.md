@@ -33,13 +33,13 @@ In Claude Code, install it as a plugin. Run the following commands in order in t
 
 ### Registering from a ZIP file
 
-Use the dedicated ZIP for registration. The ZIP you get from GitHub's "Download ZIP" contains extra files, so it may fail to register.
-
-Download the dedicated ZIP file from the link below.
+Download the dedicated ZIP file for registration from the link below.
 
 - [rikai.zip (download the latest version)](https://github.com/kokuto821/rikai/releases/latest/download/rikai.zip)
 
 Upload the downloaded `rikai.zip` to Claude's skill registration screen as is, without unzipping it.
+
+Note: The ZIP you get from GitHub's "Download ZIP" contains extra files, so it may fail to register.
 
 ## Background and problem
 
